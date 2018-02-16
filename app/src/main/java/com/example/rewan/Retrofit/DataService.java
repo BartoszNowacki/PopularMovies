@@ -9,9 +9,9 @@ import retrofit2.http.GET;
 import retrofit2.Call;
 
 /**
- * Created by Rewan on 15.02.2018.
+ * Interface for Retrofit requests
+ * @param
  */
-
 
 public interface DataService {
 

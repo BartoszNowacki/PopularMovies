@@ -17,6 +17,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
+/**
+ * Adapter for RecyclerView in Main Activity
+ * @param
+ */
 public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.CountriesViewHolder>{
 
         private List<Country> countriesList;

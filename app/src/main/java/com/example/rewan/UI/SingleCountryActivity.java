@@ -10,6 +10,8 @@ import com.example.rewan.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
+
 public class SingleCountryActivity extends AppCompatActivity {
 
     @BindView(R.id.nameValueTV)
@@ -31,19 +33,27 @@ public class SingleCountryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_single_country);
         ButterKnife.bind(this);
         if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                Log.d(TAG, "onCreate:  no extra");
-            } else {
-                nameTV.setText(extras.getString(COUNTRY_NAME));
-                alpha2TV.setText(extras.getString(COUNTRY_ALPHA2));
-                alpha3TV.setText(extras.getString(COUNTRY_ALPHA3));
-            }
+            setViewFromExtras();
         } else {
-            nameTV.setText((String) savedInstanceState.getSerializable("name"));
-            alpha2TV.setText((String) savedInstanceState.getSerializable("alpha2code"));
-            alpha3TV.setText((String) savedInstanceState.getSerializable("alpha3code"));
+            setView(savedInstanceState);
         }
+    }
+
+    void setViewFromExtras(){
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            Log.d(TAG, "onCreate:  no extra");
+        } else {
+            nameTV.setText(extras.getString(COUNTRY_NAME));
+            alpha2TV.setText(extras.getString(COUNTRY_ALPHA2));
+            alpha3TV.setText(extras.getString(COUNTRY_ALPHA3));
+        }
+    }
+
+    void setView(Bundle savedInstanceState){
+        nameTV.setText((String) savedInstanceState.getSerializable("name"));
+        alpha2TV.setText((String) savedInstanceState.getSerializable("alpha2code"));
+        alpha3TV.setText((String) savedInstanceState.getSerializable("alpha3code"));
     }
 
 }
