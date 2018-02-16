@@ -1,6 +1,7 @@
 package com.example.rewan.UI;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     private CountriesAdapter countriesAdapter;
     private LinearLayoutManager layoutManager;
 
-    RetrofitHelper retrofitHelper;
     String TAG = "Main Activity";
     List<Country> countriesList;
 
@@ -50,31 +50,38 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setupRecyclerView();
+        setupRetrofit();
+    }
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(this, SingleCountryActivity.class);
+        Country country = countriesList.get(position);
+        intent.putExtra("name", country.getName());
+        intent.putExtra("alpha2code", country.getAlpha2_code());
+        intent.putExtra("alpha3code", country.getAlpha3_code());
+        startActivity(intent);
+    }
 
+    private void setupRecyclerView(){
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
+    public void setupRetrofit(){
         Retrofit retrofit = ((RetrofitHelper)getApplication()).getRetrofitInstance();
         DataService dataService = retrofit.create(DataService.class);
         Call<JsonObject> countryCall = dataService.loadCountries();
         countryCall.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful()) {
-                    JsonObject restResponse = response.body();
-                    JsonObject result = restResponse.getAsJsonObject("RestResponse");
-                    JsonArray countriesObject = result.getAsJsonArray("result");
-
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Country>>(){}.getType();
-                    List<Country> countriesList = (List<Country>) gson.fromJson(countriesObject, listType);
-                    Log.d(TAG, "onResponse: " +countriesList);
+                    List<Country> countriesList = convertResponse(response.body());
                     setCountriesAdapter(countriesList);
-
                 } else {
                     int httpCode = response.code();
                     Log.d(TAG, "onResponse: " + httpCode);
@@ -82,24 +89,27 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
             }
         });
 
     }
-    @Override
-    public void onItemClick(View view, int position) {
-        Intent intent = new Intent(MainActivity.this, SingleCountry.class);
-        Country country = countriesList.get(position);
-        intent.putExtra("name", country.getName());
-        intent.putExtra("alpha2code", country.getAlpha2_code());
-        intent.putExtra("alpha3code", country.getAlpha3_code());
-        startActivity(intent);
+
+    private List<Country> convertResponse(JsonObject restResponse){
+
+        JsonObject result = restResponse.getAsJsonObject("RestResponse");
+        JsonArray countriesObject = result.getAsJsonArray("result");
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Country>>(){}.getType();
+
+        return (List<Country>) gson.fromJson(countriesObject, listType);
+
     }
     private void setCountriesAdapter(List<Country> countries) {
         countriesList = countries;
         countriesAdapter = new CountriesAdapter(MainActivity.this, countriesList);
         recyclerView.setAdapter(countriesAdapter);
     }
+
 }

@@ -9,13 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 
-/**
- * Created by Rewan on 16.02.2018.
- */
-
 public class RecyclerItemClickListener extends RecyclerView.SimpleOnItemTouchListener {
     private static final String TAG = "RecyclerItemClickListen";
-
 
     private final OnRecyclerClickListener mListener;
     private final GestureDetectorCompat mGestureDetector;
@@ -32,7 +27,6 @@ public class RecyclerItemClickListener extends RecyclerView.SimpleOnItemTouchLis
                 return true;
             }
         });
-
     }
 
     @Override

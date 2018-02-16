@@ -10,7 +10,7 @@ import com.example.rewan.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SingleCountry extends AppCompatActivity {
+public class SingleCountryActivity extends AppCompatActivity {
 
     @BindView(R.id.nameValueTV)
     TextView nameTV;
