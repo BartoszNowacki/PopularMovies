@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Recruitment Task</string>
+    <string name="network_helper">NetworkHelper</string>
+    <string name="country">Country</string>
+
+    <string name="name">Name:</string>
+    <string name="alpha2_code">Alpha 2 code:</string>
+    <string name="alpha3_code">Alpha 3 code:</string>
+</resources>
