@@ -20,6 +20,9 @@ public class SingleCountryActivity extends AppCompatActivity {
     TextView alpha3TV;
 
     String TAG = "SingleCountry";
+    public static String COUNTRY_NAME = "name";
+    public static String COUNTRY_ALPHA2 = "alpha2";
+    public static String COUNTRY_ALPHA3 = "alpha3";
 
 
     @Override
@@ -32,9 +35,9 @@ public class SingleCountryActivity extends AppCompatActivity {
             if(extras == null) {
                 Log.d(TAG, "onCreate:  no extra");
             } else {
-                nameTV.setText(extras.getString("name"));
-                alpha2TV.setText(extras.getString("alpha2code"));
-                alpha3TV.setText(extras.getString("alpha3code"));
+                nameTV.setText(extras.getString(COUNTRY_NAME));
+                alpha2TV.setText(extras.getString(COUNTRY_ALPHA2));
+                alpha3TV.setText(extras.getString(COUNTRY_ALPHA3));
             }
         } else {
             nameTV.setText((String) savedInstanceState.getSerializable("name"));

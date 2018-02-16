@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this, SingleCountryActivity.class);
         Country country = countriesList.get(position);
-        intent.putExtra("name", country.getName());
-        intent.putExtra("alpha2code", country.getAlpha2_code());
-        intent.putExtra("alpha3code", country.getAlpha3_code());
+        intent.putExtra(SingleCountryActivity.COUNTRY_NAME, country.getName());
+        intent.putExtra(SingleCountryActivity.COUNTRY_ALPHA2, country.getAlpha2_code());
+        intent.putExtra(SingleCountryActivity.COUNTRY_ALPHA3, country.getAlpha3_code());
         startActivity(intent);
     }
 
