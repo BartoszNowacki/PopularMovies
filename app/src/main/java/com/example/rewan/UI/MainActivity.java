@@ -2,15 +2,18 @@ package com.example.rewan.UI;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.example.rewan.Model.Country;
+import com.example.rewan.Network.NetworkHelper;
+import com.example.rewan.Network.NetworkStateDataListener;
 import com.example.rewan.R;
 import com.example.rewan.RecyclerView.CountriesAdapter;
 import com.example.rewan.RecyclerView.OnRecyclerClickListener;
@@ -33,16 +36,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements OnRecyclerClickListener {
+public class MainActivity extends AppCompatActivity implements OnRecyclerClickListener, NetworkStateDataListener {
 
     @BindView(R.id.countries_recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.constraint_layout)
+    ConstraintLayout constraintLayout;
 
-    private CountriesAdapter countriesAdapter;
-    private LinearLayoutManager layoutManager;
-
-    String TAG = "Main Activity";
+    private Call<JsonObject> countryCall;
     List<Country> countriesList;
+    NetworkHelper networkHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +53,28 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        networkHelper = new NetworkHelper(this);
         setupRecyclerView();
         setupRetrofit();
+        if (networkHelper.isNetworkAvailable(this)){
+            makeCountryCall();
+        }else {
+            Snackbar.make(constraintLayout, "There is no network connection", Snackbar.LENGTH_LONG).show();
+        }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(networkHelper, networkHelper.getIntentFilter());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(networkHelper);
+    }
+
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this, SingleCountryActivity.class);
@@ -67,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      */
     private void setupRecyclerView(){
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
         recyclerView.setLayoutManager(layoutManager);
@@ -79,7 +101,13 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     public void setupRetrofit(){
         Retrofit retrofit = ((RetrofitHelper)getApplication()).getRetrofitInstance();
         DataService dataService = retrofit.create(DataService.class);
-        Call<JsonObject> countryCall = dataService.loadCountries();
+        countryCall = dataService.loadCountries();
+    }
+    /**
+     * Method to GET response from server
+     */
+    @Override
+    public void makeCountryCall(){
         countryCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
@@ -88,17 +116,16 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
                     setCountriesAdapter(countriesList);
                 } else {
                     int httpCode = response.code();
-                    Log.d(TAG, "onResponse: " + httpCode);
+                    Snackbar.make(constraintLayout, "Error with http code" + httpCode, Snackbar.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
+                Snackbar.make(constraintLayout, "Error with code" + t.getMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
-
     }
+
     /**
      * Method to convert Json object returned from server to List<Country>
      * @param restResponse JsonObject returned from server
@@ -119,8 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      */
     private void setCountriesAdapter(List<Country> countries) {
         countriesList = countries;
-        countriesAdapter = new CountriesAdapter(countries);
+        CountriesAdapter countriesAdapter = new CountriesAdapter(countries);
         recyclerView.setAdapter(countriesAdapter);
     }
-
 }

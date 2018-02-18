@@ -1,27 +1,33 @@
 package com.example.rewan.Network;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.util.Log;
-
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Helper class for working with a remote server
  */
-public class NetworkHelper {
-    static String TAG = "Network Helper";
+public class NetworkHelper extends BroadcastReceiver {
+
+    IntentFilter mNetworkIntentFilter;
+    NetworkStateDataListener networkStateDataListener;
+
+
+    public NetworkHelper(NetworkStateDataListener dataListner) {
+        super();
+        mNetworkIntentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        this.networkStateDataListener = dataListner;
+    }
+
+    public IntentFilter getIntentFilter(){
+        return mNetworkIntentFilter;
+    }
 
     /**
      * Builds client which should be used with any http requests.
@@ -33,5 +39,26 @@ public class NetworkHelper {
         return new OkHttpClient.Builder()
                 .cache(cache);
     }
+    /**
+     * Method to check internet connection
+     * @param context app context
+     * @return boolean is connected to Network
+     */
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            return (networkInfo != null && networkInfo.isConnectedOrConnecting());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (isNetworkAvailable(context)) {
+                networkStateDataListener.makeCountryCall();
+        }
+    }
 }
