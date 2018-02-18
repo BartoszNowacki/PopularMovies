@@ -17,11 +17,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-
+/**
+ * Helper class for working with a remote server
+ */
 public class NetworkHelper {
-
-
     static String TAG = "Network Helper";
+
+    /**
+     * Builds client which should be used with any http requests.
+     * @param context app context
+     * @param cache cache dir
+     * @return OkHttpClient
+     */
     public static OkHttpClient.Builder getBuilder(Context context, Cache cache) {
         return new OkHttpClient.Builder()
                 .cache(cache);

@@ -19,15 +19,12 @@ import butterknife.ButterKnife;
 
 /**
  * Adapter for RecyclerView in Main Activity
- * @param
  */
 public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.CountriesViewHolder>{
 
         private List<Country> countriesList;
-        private Context mContext;
 
-        public CountriesAdapter(Context context, List<Country> countriesList) {
-            this.mContext = context;
+        public CountriesAdapter(List<Country> countriesList) {
             this.countriesList = countriesList;
         }
 
@@ -49,6 +46,9 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
             return ((countriesList != null) && (countriesList.size() != 0) ? countriesList.size() : 1);
         }
 
+    /**
+     * ViewHolder static class for RecyclerView
+     */
     static class CountriesViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.country_name)

@@ -11,7 +11,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-
+/**
+ * Class for details of Country object
+ */
 public class SingleCountryActivity extends AppCompatActivity {
 
     @BindView(R.id.nameValueTV)

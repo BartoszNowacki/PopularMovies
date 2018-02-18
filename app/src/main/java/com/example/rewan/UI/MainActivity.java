@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         intent.putExtra(SingleCountryActivity.COUNTRY_ALPHA3, country.getAlpha3_code());
         startActivity(intent);
     }
-
+    /**
+     * Method to setup RecyclerView for MainActivity
+     */
     private void setupRecyclerView(){
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -71,7 +73,9 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-
+    /**
+     * Method to setup Retrofit instance
+     */
     public void setupRetrofit(){
         Retrofit retrofit = ((RetrofitHelper)getApplication()).getRetrofitInstance();
         DataService dataService = retrofit.create(DataService.class);
@@ -95,7 +99,11 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         });
 
     }
-
+    /**
+     * Method to convert Json object returned from server to List<Country>
+     * @param restResponse JsonObject returned from server
+     * @return List<Country> List of Country objects
+     */
     private List<Country> convertResponse(JsonObject restResponse){
 
         JsonObject result = restResponse.getAsJsonObject("RestResponse");
@@ -104,11 +112,14 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         Type listType = new TypeToken<List<Country>>(){}.getType();
 
         return (List<Country>) gson.fromJson(countriesObject, listType);
-
     }
+    /**
+     * Method to set RecyclerView adapter
+     * @param countries List of Country objects
+     */
     private void setCountriesAdapter(List<Country> countries) {
         countriesList = countries;
-        countriesAdapter = new CountriesAdapter(MainActivity.this, countriesList);
+        countriesAdapter = new CountriesAdapter(countries);
         recyclerView.setAdapter(countriesAdapter);
     }
 

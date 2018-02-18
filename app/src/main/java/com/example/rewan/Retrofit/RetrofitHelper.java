@@ -11,6 +11,9 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Helper class for working with a retrofit interface
+ */
 public class RetrofitHelper extends Application {
 
     Retrofit retrofit;

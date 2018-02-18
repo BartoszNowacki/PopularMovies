@@ -10,7 +10,6 @@ import retrofit2.Call;
 
 /**
  * Interface for Retrofit requests
- * @param
  */
 
 public interface DataService {

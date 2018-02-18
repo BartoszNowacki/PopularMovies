@@ -8,7 +8,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-
+/**
+ * Listener class for RecyclerView onSingleTap event
+ */
 public class RecyclerItemClickListener extends RecyclerView.SimpleOnItemTouchListener {
     private static final String TAG = "RecyclerItemClickListen";
 

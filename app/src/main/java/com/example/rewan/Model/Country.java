@@ -3,6 +3,9 @@ package com.example.rewan.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Model for Country feed
+ */
 public class Country {
 
         @SerializedName("name")
