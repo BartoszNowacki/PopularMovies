@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     @BindView(R.id.constraint_layout)
     ConstraintLayout constraintLayout;
 
-    private Call<JsonObject> countryCall;
     List<Country> countriesList;
     NetworkHelper networkHelper;
+    private DataService dataService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +100,14 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      */
     public void setupRetrofit(){
         Retrofit retrofit = ((RetrofitHelper)getApplication()).getRetrofitInstance();
-        DataService dataService = retrofit.create(DataService.class);
-        countryCall = dataService.loadCountries();
+        dataService = retrofit.create(DataService.class);
     }
     /**
      * Method to GET response from server
      */
     @Override
     public void makeCountryCall(){
+        Call<JsonObject> countryCall = dataService.loadCountries();
         countryCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
