@@ -1,4 +1,4 @@
-package com.example.rewan.RecyclerView;
+package com.example.rewan.recycler;
 
 import android.view.View;
 

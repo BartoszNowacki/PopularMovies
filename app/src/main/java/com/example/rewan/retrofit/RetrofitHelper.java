@@ -1,8 +1,8 @@
-package com.example.rewan.Retrofit;
+package com.example.rewan.retrofit;
 
 import android.app.Application;
 
-import com.example.rewan.Network.NetworkHelper;
+import com.example.rewan.network.NetworkHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

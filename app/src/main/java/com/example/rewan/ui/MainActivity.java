@@ -1,4 +1,4 @@
-package com.example.rewan.UI;
+package com.example.rewan.ui;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,15 +11,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.example.rewan.Model.Country;
-import com.example.rewan.Network.NetworkHelper;
-import com.example.rewan.Network.NetworkStateDataListener;
+import com.example.rewan.model.Country;
+import com.example.rewan.network.NetworkHelper;
+import com.example.rewan.network.NetworkStateDataListener;
 import com.example.rewan.R;
-import com.example.rewan.RecyclerView.CountriesAdapter;
-import com.example.rewan.RecyclerView.OnRecyclerClickListener;
-import com.example.rewan.RecyclerView.RecyclerItemClickListener;
-import com.example.rewan.Retrofit.DataService;
-import com.example.rewan.Retrofit.RetrofitHelper;
+import com.example.rewan.recycler.CountriesAdapter;
+import com.example.rewan.recycler.OnRecyclerClickListener;
+import com.example.rewan.recycler.RecyclerItemClickListener;
+import com.example.rewan.retrofit.DataService;
+import com.example.rewan.retrofit.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

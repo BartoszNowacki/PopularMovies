@@ -1,4 +1,4 @@
-package com.example.rewan.Retrofit;
+package com.example.rewan.retrofit;
 
 import com.google.gson.JsonObject;
 

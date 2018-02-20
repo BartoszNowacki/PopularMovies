@@ -1,4 +1,4 @@
-package com.example.rewan.RecyclerView;
+package com.example.rewan.recycler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.example.rewan.Model.Country;
+import com.example.rewan.model.Country;
 import com.example.rewan.R;
 
 import java.util.List;

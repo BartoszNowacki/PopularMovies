@@ -1,4 +1,4 @@
-package com.example.rewan.UI;
+package com.example.rewan.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

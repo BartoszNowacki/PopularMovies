@@ -1,4 +1,4 @@
-package com.example.rewan.Model;
+package com.example.rewan.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
