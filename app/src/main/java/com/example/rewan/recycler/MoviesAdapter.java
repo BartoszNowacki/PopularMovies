@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.example.rewan.model.Country;
+import com.example.rewan.model.Movie;
 import com.example.rewan.R;
 
 import java.util.List;
@@ -19,11 +19,11 @@ import butterknife.ButterKnife;
 /**
  * Adapter for RecyclerView in Main Activity
  */
-public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.CountriesViewHolder>{
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.CountriesViewHolder>{
 
-        private List<Country> countriesList;
+        private List<Movie> countriesList;
 
-        public CountriesAdapter(List<Country> countriesList) {
+        public MoviesAdapter(List<Movie> countriesList) {
             this.countriesList = countriesList;
         }
 
@@ -36,8 +36,8 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Coun
 
         @Override
         public void onBindViewHolder(CountriesViewHolder holder, int position) {
-            Country countryEntry = countriesList.get(position);
-                holder.name.setText(countryEntry.getName());
+            Movie movieEntry = countriesList.get(position);
+                holder.name.setText(movieEntry.getName());
         }
 
         @Override

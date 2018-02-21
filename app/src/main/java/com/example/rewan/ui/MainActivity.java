@@ -11,11 +11,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.example.rewan.model.Country;
+import com.example.rewan.model.Movie;
 import com.example.rewan.network.NetworkHelper;
 import com.example.rewan.network.NetworkStateDataListener;
 import com.example.rewan.R;
-import com.example.rewan.recycler.CountriesAdapter;
+import com.example.rewan.recycler.MoviesAdapter;
 import com.example.rewan.recycler.OnRecyclerClickListener;
 import com.example.rewan.recycler.RecyclerItemClickListener;
 import com.example.rewan.retrofit.DataService;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     @BindView(R.id.constraint_layout)
     ConstraintLayout constraintLayout;
 
-    List<Country> countriesList;
+    List<Movie> countriesList;
     NetworkHelper networkHelper;
     private DataService dataService;
 
@@ -77,11 +77,13 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(this, SingleCountryActivity.class);
-        Country country = countriesList.get(position);
-        intent.putExtra(SingleCountryActivity.COUNTRY_NAME, country.getName());
-        intent.putExtra(SingleCountryActivity.COUNTRY_ALPHA2, country.getAlpha2_code());
-        intent.putExtra(SingleCountryActivity.COUNTRY_ALPHA3, country.getAlpha3_code());
+        Intent intent = new Intent(this, SingleMovieActivity.class);
+        Movie movie = countriesList.get(position);
+        intent.putExtra(SingleMovieActivity.COUNTRY_NAME, movie.getTitle());
+        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA2, movie.getReleaseDate());
+        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA3, movie.getPlotSynopsis());
+        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA3, movie.getMoviePoster());
+        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA3, movie.getVoteAverage());
         startActivity(intent);
     }
     /**
@@ -107,12 +109,12 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      */
     @Override
     public void makeCountryCall(){
-        Call<JsonObject> countryCall = dataService.loadCountries();
+        Call<JsonObject> countryCall = dataService.loadPopularMovies(getString(R.string.movie_api_key));
         countryCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful()) {
-                    List<Country> countriesList = convertResponse(response.body());
+                    List<Movie> countriesList = convertResponse(response.body());
                     setCountriesAdapter(countriesList);
                 } else {
                     int httpCode = response.code();
@@ -127,26 +129,26 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     }
 
     /**
-     * Method to convert Json object returned from server to List<Country>
+     * Method to convert Json object returned from server to List<Movie>
      * @param restResponse JsonObject returned from server
-     * @return List<Country> List of Country objects
+     * @return List<Movie> List of Movie objects
      */
-    private List<Country> convertResponse(JsonObject restResponse){
+    private List<Movie> convertResponse(JsonObject restResponse){
 
         JsonObject result = restResponse.getAsJsonObject("RestResponse");
         JsonArray countriesObject = result.getAsJsonArray("result");
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<Country>>(){}.getType();
+        Type listType = new TypeToken<List<Movie>>(){}.getType();
 
-        return (List<Country>) gson.fromJson(countriesObject, listType);
+        return (List<Movie>) gson.fromJson(countriesObject, listType);
     }
     /**
      * Method to set RecyclerView adapter
-     * @param countries List of Country objects
+     * @param countries List of Movie objects
      */
-    private void setCountriesAdapter(List<Country> countries) {
+    private void setCountriesAdapter(List<Movie> countries) {
         countriesList = countries;
-        CountriesAdapter countriesAdapter = new CountriesAdapter(countries);
-        recyclerView.setAdapter(countriesAdapter);
+        MoviesAdapter moviesAdapter = new MoviesAdapter(countries);
+        recyclerView.setAdapter(moviesAdapter);
     }
 }

@@ -12,9 +12,9 @@ import butterknife.ButterKnife;
 
 
 /**
- * Class for details of Country object
+ * Class for details of Movie object
  */
-public class SingleCountryActivity extends AppCompatActivity {
+public class SingleMovieActivity extends AppCompatActivity {
 
     @BindView(R.id.nameValueTV)
     TextView nameTV;

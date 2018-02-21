@@ -22,7 +22,7 @@ public class RetrofitHelper extends Application {
         if (retrofit != null) {
             return retrofit;
         }
-        String baseUrl = "http://services.groupkt.com";
+        String baseUrl = "http://api.themoviedb.org";
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(this.getCacheDir(), cacheSize);
         OkHttpClient okHttpClient = NetworkHelper.getBuilder(this, cache).build();
