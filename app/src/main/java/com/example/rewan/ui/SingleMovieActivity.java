@@ -23,10 +23,12 @@ public class SingleMovieActivity extends AppCompatActivity {
     @BindView(R.id.alpha3ValueTV)
     TextView alpha3TV;
 
-    String TAG = "SingleCountry";
-    public static String COUNTRY_NAME = "name";
-    public static String COUNTRY_ALPHA2 = "alpha2";
-    public static String COUNTRY_ALPHA3 = "alpha3";
+    String TAG = "SingleMovie";
+    public final static String MOVIE_TITLE = "title";
+    public final static String MOVIE_RELEASE = "release";
+    public final static String MOVIE_POSTER = "poster";
+    public final static String MOVIE_VOTE = "vote";
+    public final static String MOVIE_PLOT = "plot";
 
 
     @Override
@@ -46,9 +48,11 @@ public class SingleMovieActivity extends AppCompatActivity {
         if(extras == null) {
             Log.d(TAG, "onCreate:  no extra");
         } else {
-            nameTV.setText(extras.getString(COUNTRY_NAME));
-            alpha2TV.setText(extras.getString(COUNTRY_ALPHA2));
-            alpha3TV.setText(extras.getString(COUNTRY_ALPHA3));
+            nameTV.setText(extras.getString(MOVIE_TITLE));
+            alpha2TV.setText(extras.getString(MOVIE_RELEASE));
+            alpha3TV.setText(extras.getString(MOVIE_POSTER));
+            alpha3TV.setText(extras.getString(MOVIE_VOTE));
+            alpha3TV.setText(extras.getString(MOVIE_PLOT));
         }
     }
 

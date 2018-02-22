@@ -6,12 +6,20 @@
     android:orientation="horizontal"
     android:padding="8dp"
     android:weightSum="3">
+        <ImageView
+            android:id="@+id/thumbnail_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxHeight="@android:dimen/app_icon_size"
+            android:minHeight="5dp"
+            android:scaleType="fitStart" />
 
         <TextView
-            android:id="@+id/country_name"
+            android:id="@+id/movie_title_tv"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             tools:text="@string/movie" />
 
 </LinearLayout>

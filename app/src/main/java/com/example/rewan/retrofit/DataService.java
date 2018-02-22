@@ -4,7 +4,10 @@ import com.google.gson.JsonObject;
 
 import retrofit2.http.GET;
 import retrofit2.Call;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Interface for Retrofit requests
@@ -12,9 +15,9 @@ import retrofit2.http.Path;
 
 public interface DataService {
 
-    @GET("/3/movie/popular/?api_key={api_key}")
-    Call<JsonObject> loadPopularMovies(@Path(value = "api_key", encoded = true) String apiKey);
+    @GET("/3/movie/popular")
+    Call<JsonObject> loadPopularMovies(@Query("api_key") String api_key);
 
-    @GET("/3/movie/top_rated/?api_key={api_key}")
-    Call<JsonObject> loadTopMovies(@Path(value = "api_key", encoded = true) String apiKey);
+    @GET("/3/movie/top_rated")
+    Call<JsonObject> loadTopMovies(@Query("api_key") String api_key);
 }

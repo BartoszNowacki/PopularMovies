@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/name"
+        android:text=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="@string/alpha2_code"
+        android:text=""
         app:layout_constraintStart_toStartOf="@+id/nameTV"
         app:layout_constraintTop_toBottomOf="@+id/nameTV" />
 
@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/alpha3_code"
+        android:text=""
         app:layout_constraintStart_toStartOf="@+id/aplha2TV"
         app:layout_constraintTop_toBottomOf="@+id/aplha2TV" />
 

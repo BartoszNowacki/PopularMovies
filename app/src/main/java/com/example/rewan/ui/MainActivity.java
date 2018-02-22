@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.example.rewan.model.Movie;
@@ -24,6 +25,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     List<Movie> countriesList;
     NetworkHelper networkHelper;
     private DataService dataService;
+    private boolean isTopCategory=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         setupRecyclerView();
         setupRetrofit();
         if (networkHelper.isNetworkAvailable(this)){
-            makeCountryCall();
+            makeMovieCall();
         }else {
             Snackbar.make(constraintLayout, "There is no network connection", Snackbar.LENGTH_LONG).show();
         }
@@ -79,11 +83,11 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this, SingleMovieActivity.class);
         Movie movie = countriesList.get(position);
-        intent.putExtra(SingleMovieActivity.COUNTRY_NAME, movie.getTitle());
-        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA2, movie.getReleaseDate());
-        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA3, movie.getPlotSynopsis());
-        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA3, movie.getMoviePoster());
-        intent.putExtra(SingleMovieActivity.COUNTRY_ALPHA3, movie.getVoteAverage());
+        intent.putExtra(SingleMovieActivity.MOVIE_TITLE, movie.getTitle());
+        intent.putExtra(SingleMovieActivity.MOVIE_RELEASE, movie.getReleaseDate());
+        intent.putExtra(SingleMovieActivity.MOVIE_PLOT, movie.getPlotSynopsis());
+        intent.putExtra(SingleMovieActivity.MOVIE_POSTER, movie.getMoviePoster());
+        intent.putExtra(SingleMovieActivity.MOVIE_VOTE, movie.getVoteAverage());
         startActivity(intent);
     }
     /**
@@ -108,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      * Method to GET response from server
      */
     @Override
-    public void makeCountryCall(){
-        Call<JsonObject> countryCall = dataService.loadPopularMovies(getString(R.string.movie_api_key));
-        countryCall.enqueue(new Callback<JsonObject>() {
+    public void makeMovieCall(){
+        Call<JsonObject> moviesCall = getSortOrder();
+        moviesCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful()) {
@@ -127,6 +131,16 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
             }
         });
     }
+    /**
+     * Method to return proper GET method for sort order category
+     */
+    public Call<JsonObject> getSortOrder(){
+        if (isTopCategory){
+            return dataService.loadPopularMovies(getString(R.string.movie_api_key));
+        }else{
+            return dataService.loadTopMovies(getString(R.string.movie_api_key));
+        }
+    }
 
     /**
      * Method to convert Json object returned from server to List<Movie>
@@ -134,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      * @return List<Movie> List of Movie objects
      */
     private List<Movie> convertResponse(JsonObject restResponse){
-
-        JsonObject result = restResponse.getAsJsonObject("RestResponse");
-        JsonArray countriesObject = result.getAsJsonArray("result");
+        Log.d("tbs", "convertResponse: " + restResponse);
+        JsonArray moviesJsonArray = restResponse.getAsJsonArray("results");
+        Log.d("tbs", "convertResponse: " + moviesJsonArray);
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Movie>>(){}.getType();
 
-        return (List<Movie>) gson.fromJson(countriesObject, listType);
+        return (List<Movie>) gson.fromJson(moviesJsonArray, listType);
     }
     /**
      * Method to set RecyclerView adapter
@@ -148,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      */
     private void setCountriesAdapter(List<Movie> countries) {
         countriesList = countries;
-        MoviesAdapter moviesAdapter = new MoviesAdapter(countries);
+        MoviesAdapter moviesAdapter = new MoviesAdapter(countries, this);
         recyclerView.setAdapter(moviesAdapter);
     }
 }
