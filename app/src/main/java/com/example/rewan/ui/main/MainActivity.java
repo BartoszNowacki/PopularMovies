@@ -1,4 +1,4 @@
-package com.example.rewan.ui;
+package com.example.rewan.ui.main;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -7,9 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.example.rewan.model.Movie;
@@ -21,12 +21,11 @@ import com.example.rewan.recycler.OnRecyclerClickListener;
 import com.example.rewan.recycler.RecyclerItemClickListener;
 import com.example.rewan.retrofit.DataService;
 import com.example.rewan.retrofit.RetrofitHelper;
+import com.example.rewan.ui.singlemovie.SingleMovieActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -39,7 +38,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements OnRecyclerClickListener, NetworkStateDataListener {
+public class MainActivity
+        extends AppCompatActivity
+        implements MainContract.View, OnRecyclerClickListener, NetworkStateDataListener {
 
     @BindView(R.id.countries_recycler_view)
     RecyclerView recyclerView;
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      */
     private void setupRecyclerView(){
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 2);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
         recyclerView.setLayoutManager(layoutManager);
@@ -148,9 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
      * @return List<Movie> List of Movie objects
      */
     private List<Movie> convertResponse(JsonObject restResponse){
-        Log.d("tbs", "convertResponse: " + restResponse);
         JsonArray moviesJsonArray = restResponse.getAsJsonArray("results");
-        Log.d("tbs", "convertResponse: " + moviesJsonArray);
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Movie>>(){}.getType();
 
@@ -164,5 +163,15 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerClickLi
         countriesList = countries;
         MoviesAdapter moviesAdapter = new MoviesAdapter(countries, this);
         recyclerView.setAdapter(moviesAdapter);
+    }
+
+    @Override
+    public void showMessage(int messageId) {
+
+    }
+
+    @Override
+    public void showErrorMessage(String errorMessage) {
+
     }
 }

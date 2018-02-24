@@ -1,4 +1,4 @@
-package com.example.rewan.ui;
+package com.example.rewan.ui.singlemovie;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

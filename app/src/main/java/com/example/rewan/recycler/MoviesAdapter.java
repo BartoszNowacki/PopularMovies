@@ -44,7 +44,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.CountriesV
         public void onBindViewHolder(CountriesViewHolder holder, int position) {
             Movie movieEntry = countriesList.get(position);
             ImagePathBuilder pathBuilder = new ImagePathBuilder();
-                holder.titleTV.setText(movieEntry.getTitle());
             Picasso.with(context)
                     .load(pathBuilder.pathBuilder(movieEntry.getMoviePoster()))
                     .error(R.drawable.placeholder)
@@ -62,8 +61,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.CountriesV
      */
     static class CountriesViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.movie_title_tv)
-        TextView titleTV;
         @BindView(R.id.thumbnail_iv)
         ImageView thumbnailIV;
 
