@@ -31,11 +31,10 @@ public class NetworkHelper extends BroadcastReceiver {
 
     /**
      * Builds client which should be used with any http requests.
-     * @param context app context
      * @param cache cache dir
      * @return OkHttpClient
      */
-    public static OkHttpClient.Builder getBuilder(Context context, Cache cache) {
+    public static OkHttpClient.Builder getBuilder(Cache cache) {
         return new OkHttpClient.Builder()
                 .cache(cache);
     }

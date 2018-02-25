@@ -1,7 +1,6 @@
 package com.example.rewan.ui.main;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +9,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.rewan.model.Movie;
-import com.example.rewan.network.NetworkHelper;
-import com.example.rewan.network.NetworkStateDataListener;
 import com.example.rewan.R;
 import com.example.rewan.recycler.MoviesAdapter;
 import com.example.rewan.recycler.OnRecyclerClickListener;
@@ -22,79 +25,107 @@ import com.example.rewan.recycler.RecyclerItemClickListener;
 import com.example.rewan.retrofit.DataService;
 import com.example.rewan.retrofit.RetrofitHelper;
 import com.example.rewan.ui.singlemovie.SingleMovieActivity;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
 public class MainActivity
         extends AppCompatActivity
-        implements MainContract.View, OnRecyclerClickListener, NetworkStateDataListener {
+        implements MainContract.View, OnRecyclerClickListener {
 
     @BindView(R.id.countries_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.constraint_layout)
     ConstraintLayout constraintLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    Spinner sortSpinner;
+    private Menu menu;
 
-    List<Movie> countriesList;
-    NetworkHelper networkHelper;
+    List<Movie> moviesList;
     private DataService dataService;
-    private boolean isTopCategory=false;
+    MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
 
-        networkHelper = new NetworkHelper(this);
         setupRecyclerView();
         setupRetrofit();
-        if (networkHelper.isNetworkAvailable(this)){
-            makeMovieCall();
-        }else {
-            Snackbar.make(constraintLayout, "There is no network connection", Snackbar.LENGTH_LONG).show();
-        }
+        String apiKey = getString(R.string.movie_api_key);
+        mainPresenter = new MainPresenter(dataService, apiKey);
+        mainPresenter.attachView(this);
+        mainPresenter.getMovies(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(networkHelper, networkHelper.getIntentFilter());
+        registerReceiver(mainPresenter.getReceiver(), mainPresenter.getIntentFilter());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(networkHelper);
+        unregisterReceiver(mainPresenter.getReceiver());
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.main, menu);
+        configureSortSpinner();
+        return true;
     }
 
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this, SingleMovieActivity.class);
-        Movie movie = countriesList.get(position);
-        intent.putExtra(SingleMovieActivity.MOVIE_TITLE, movie.getTitle());
-        intent.putExtra(SingleMovieActivity.MOVIE_RELEASE, movie.getReleaseDate());
-        intent.putExtra(SingleMovieActivity.MOVIE_PLOT, movie.getPlotSynopsis());
-        intent.putExtra(SingleMovieActivity.MOVIE_POSTER, movie.getMoviePoster());
-        intent.putExtra(SingleMovieActivity.MOVIE_VOTE, movie.getVoteAverage());
-        startActivity(intent);
+        startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position)));
+    }
+    /**
+     * Configure spinner for Sort order
+     */
+    private void configureSortSpinner() {
+        final MenuItem item = menu.findItem(R.id.sort);
+        sortSpinner = (Spinner) item.getActionView();
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this, R.array.sort_criteria_array, android.R.layout.simple_spinner_item);
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(sortAdapter);
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItem = sortSpinner.getSelectedItem().toString();
+checkSortOrder(selectedItem);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+    /**
+     * Checks sort Order category and send it to mainPresenter.
+     */
+    private void checkSortOrder(String sortType){
+        if (sortType==getString(R.string.popular)) {
+            mainPresenter.setTopCategory(false);
+        }else if(sortType==getString(R.string.top_rated)){
+            mainPresenter.setTopCategory(true);
+        }
     }
     /**
      * Method to setup RecyclerView for MainActivity
      */
-    private void setupRecyclerView(){
+    private void setupRecyclerView() {
         recyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 2);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -102,76 +133,38 @@ public class MainActivity
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
+
     /**
      * Method to setup Retrofit instance
      */
-    public void setupRetrofit(){
-        Retrofit retrofit = ((RetrofitHelper)getApplication()).getRetrofitInstance();
+    public void setupRetrofit() {
+        Retrofit retrofit = ((RetrofitHelper) getApplication()).getRetrofitInstance();
         dataService = retrofit.create(DataService.class);
     }
-    /**
-     * Method to GET response from server
-     */
-    @Override
-    public void makeMovieCall(){
-        Call<JsonObject> moviesCall = getSortOrder();
-        moviesCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    List<Movie> countriesList = convertResponse(response.body());
-                    setCountriesAdapter(countriesList);
-                } else {
-                    int httpCode = response.code();
-                    Snackbar.make(constraintLayout, "Error with http code" + httpCode, Snackbar.LENGTH_LONG).show();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                Snackbar.make(constraintLayout, "Error with code" + t.getMessage(), Snackbar.LENGTH_LONG).show();
-            }
-        });
-    }
-    /**
-     * Method to return proper GET method for sort order category
-     */
-    public Call<JsonObject> getSortOrder(){
-        if (isTopCategory){
-            return dataService.loadPopularMovies(getString(R.string.movie_api_key));
-        }else{
-            return dataService.loadTopMovies(getString(R.string.movie_api_key));
-        }
-    }
 
-    /**
-     * Method to convert Json object returned from server to List<Movie>
-     * @param restResponse JsonObject returned from server
-     * @return List<Movie> List of Movie objects
-     */
-    private List<Movie> convertResponse(JsonObject restResponse){
-        JsonArray moviesJsonArray = restResponse.getAsJsonArray("results");
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<Movie>>(){}.getType();
-
-        return (List<Movie>) gson.fromJson(moviesJsonArray, listType);
-    }
     /**
      * Method to set RecyclerView adapter
-     * @param countries List of Movie objects
+     *
+     * @param movies List of Movie objects
      */
-    private void setCountriesAdapter(List<Movie> countries) {
-        countriesList = countries;
-        MoviesAdapter moviesAdapter = new MoviesAdapter(countries, this);
+    @Override
+    public void setMoviesAdapter(List<Movie> movies) {
+        moviesList = movies;
+        MoviesAdapter moviesAdapter = new MoviesAdapter(movies, this);
         recyclerView.setAdapter(moviesAdapter);
     }
 
     @Override
     public void showMessage(int messageId) {
-
+        switch (messageId) {
+            case R.string.network_disabled:
+                Snackbar.make(constraintLayout, R.string.network_disabled, Snackbar.LENGTH_LONG).show();
+                break;
+        }
     }
 
     @Override
     public void showErrorMessage(String errorMessage) {
-
+        Snackbar.make(constraintLayout, "Error with code: " + errorMessage, Snackbar.LENGTH_LONG).show();
     }
 }

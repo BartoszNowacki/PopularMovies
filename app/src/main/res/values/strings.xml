@@ -3,11 +3,22 @@
     <string name="network_helper">NetworkHelper</string>
     <string name="movie">Movie</string>
 
+    <!-- Model -->
     <string name="title">Name:</string>
     <string name="release_date">Release date:</string>
     <string name="poster_path">Poster path</string>
     <string name="vote_average">Vote average:</string>
     <string name="plot_synopsis">Plot synopsis:</string>
 
+
+    <string name="network_disabled">There is no network connection</string>
+    <string name="sort">sort</string>
+
+    <!-- Model -->
+    <string name="top_rated">Top rated</string>
+    <string name="popular">Popular</string>
+
+
+    <string name="single_activity_name">Details</string>
 
 </resources>

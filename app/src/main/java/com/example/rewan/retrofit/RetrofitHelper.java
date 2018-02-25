@@ -25,7 +25,7 @@ public class RetrofitHelper extends Application {
         String baseUrl = "http://api.themoviedb.org";
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(this.getCacheDir(), cacheSize);
-        OkHttpClient okHttpClient = NetworkHelper.getBuilder(this, cache).build();
+        OkHttpClient okHttpClient = NetworkHelper.getBuilder(cache).build();
 
         Gson gson = new GsonBuilder()
                 .setLenient()
