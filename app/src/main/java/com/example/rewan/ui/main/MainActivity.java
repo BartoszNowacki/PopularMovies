@@ -170,6 +170,6 @@ public class MainActivity
 
     @Override
     public void showErrorMessage(String errorMessage) {
-        Snackbar.make(constraintLayout, "Error with code: " + errorMessage, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(constraintLayout, R.string.error + errorMessage, Snackbar.LENGTH_LONG).show();
     }
 }

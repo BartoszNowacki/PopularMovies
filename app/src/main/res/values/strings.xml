@@ -12,6 +12,7 @@
 
 
     <string name="network_disabled">There is no network connection</string>
+    <string name="error">Error with code: </string>
     <string name="sort">sort</string>
 
     <!-- Model -->
