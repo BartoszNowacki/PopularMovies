@@ -11,7 +11,6 @@ import com.example.rewan.model.Movie;
 import com.example.rewan.network.NetworkHelper;
 import com.example.rewan.network.NetworkStateDataListener;
 import com.example.rewan.retrofit.DataService;
-import com.example.rewan.ui.singlemovie.SingleMovieActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -73,7 +72,7 @@ public class MainPresenter
         });
     }
 
-    public Call<JsonObject> getSortOrder() {
+    private Call<JsonObject> getSortOrder() {
         if (isTopCategory) {
             return dataService.loadPopularMovies(API_KEY);
         } else {
@@ -84,7 +83,7 @@ public class MainPresenter
      * Sets variable isTopCategory
      * @param isTopCategory boolean to set category
      */
-    public void setTopCategory(boolean isTopCategory) {
+    void setTopCategory(boolean isTopCategory) {
         this.isTopCategory = isTopCategory;
     }
 
@@ -106,11 +105,11 @@ public class MainPresenter
     }
 
     public Intent configuredIntent(Intent intent, Movie movie) {
-        intent.putExtra(SingleMovieActivity.MOVIE_TITLE, movie.getTitle());
-        intent.putExtra(SingleMovieActivity.MOVIE_RELEASE, movie.getReleaseDate());
-        intent.putExtra(SingleMovieActivity.MOVIE_PLOT, movie.getPlotSynopsis());
-        intent.putExtra(SingleMovieActivity.MOVIE_POSTER, movie.getMoviePoster());
-        intent.putExtra(SingleMovieActivity.MOVIE_VOTE, movie.getVoteAverage());
+        intent.putExtra(Movie.MovieTags.MOVIE_TITLE, movie.getTitle());
+        intent.putExtra(Movie.MovieTags.MOVIE_RELEASE, movie.getReleaseDate());
+        intent.putExtra(Movie.MovieTags.MOVIE_PLOT, movie.getPlotSynopsis());
+        intent.putExtra(Movie.MovieTags.MOVIE_POSTER, movie.getMoviePoster());
+        intent.putExtra(Movie.MovieTags.MOVIE_VOTE, movie.getVoteAverage());
         return intent;
     }
 }

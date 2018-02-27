@@ -51,4 +51,11 @@ public class Movie {
                     ", plotSynopsis='" + moviePoster + '\'' +
                     '}';
         }
+        public static class MovieTags {
+                public final static String MOVIE_TITLE = "title";
+                public final static String MOVIE_RELEASE = "release";
+                public final static String MOVIE_POSTER = "poster";
+                public final static String MOVIE_VOTE = "vote";
+                public final static String MOVIE_PLOT = "plot";
+        }
 }

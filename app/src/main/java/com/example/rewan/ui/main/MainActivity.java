@@ -24,7 +24,7 @@ import com.example.rewan.recycler.OnRecyclerClickListener;
 import com.example.rewan.recycler.RecyclerItemClickListener;
 import com.example.rewan.retrofit.DataService;
 import com.example.rewan.retrofit.RetrofitHelper;
-import com.example.rewan.ui.singlemovie.SingleMovieActivity;
+import com.example.rewan.ui.detail.DetailActivity;
 
 import java.util.List;
 
@@ -76,6 +76,7 @@ public class MainActivity
         super.onPause();
         unregisterReceiver(mainPresenter.getReceiver());
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
@@ -86,9 +87,10 @@ public class MainActivity
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(this, SingleMovieActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position)));
     }
+
     /**
      * Configure spinner for Sort order
      */
@@ -102,7 +104,8 @@ public class MainActivity
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedItem = sortSpinner.getSelectedItem().toString();
-checkSortOrder(selectedItem);
+                checkSortOrder(selectedItem);
+                mainPresenter.getMovies(MainActivity.this);
             }
 
             @Override
@@ -112,16 +115,18 @@ checkSortOrder(selectedItem);
         });
 
     }
+
     /**
      * Checks sort Order category and send it to mainPresenter.
      */
-    private void checkSortOrder(String sortType){
-        if (sortType==getString(R.string.popular)) {
+    private void checkSortOrder(String sortType) {
+        if (sortType.equals(getString(R.string.popular))) {
             mainPresenter.setTopCategory(false);
-        }else if(sortType==getString(R.string.top_rated)){
+        } else if (sortType.equals(getString(R.string.top_rated))) {
             mainPresenter.setTopCategory(true);
         }
     }
+
     /**
      * Method to setup RecyclerView for MainActivity
      */
