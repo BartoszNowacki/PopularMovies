@@ -3,10 +3,14 @@ package com.example.rewan.ui.detail;
 
 import com.example.rewan.base.MvpPresenter;
 import com.example.rewan.base.MvpView;
+import com.example.rewan.model.Video;
+
+import java.util.List;
 
 public interface DetailContract {
     interface View extends MvpView {
         void setView();
+        void setVideosAdapter(List<Video> videos);
     }
 
     interface Presenter<V extends MvpView> extends MvpPresenter<V> {

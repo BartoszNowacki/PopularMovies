@@ -5,10 +5,10 @@
 
     <!-- Model -->
     <string name="title">Name:</string>
-    <string name="release_date">Release date:</string>
+    <string name="release_date">Release date</string>
     <string name="poster_path">Poster path</string>
-    <string name="vote_average">Rating:</string>
-    <string name="plot_synopsis">Plot:</string>
+    <string name="vote_average">Rating</string>
+    <string name="plot_synopsis">Plot</string>
 
 
     <string name="network_disabled">There is no network connection</string>

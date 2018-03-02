@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 
 import com.example.rewan.model.Movie;
@@ -23,29 +22,29 @@ import butterknife.ButterKnife;
 /**
  * Adapter for RecyclerView in Main Activity
  */
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.CountriesViewHolder>{
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>{
 
-        private List<Movie> countriesList;
+        private List<Movie> moviesList;
         private Context context;
 
-        public MoviesAdapter(List<Movie> countriesList, Context context) {
-            this.countriesList = countriesList;
+        public MoviesAdapter(List<Movie> moviesList, Context context) {
+            this.moviesList = moviesList;
             this.context = context;
         }
 
         @Override
-        public CountriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.movie_entry, parent, false);
-            return new CountriesViewHolder(view);
+            return new MoviesViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(CountriesViewHolder holder, int position) {
-            Movie movieEntry = countriesList.get(position);
+        public void onBindViewHolder(MoviesViewHolder holder, int position) {
+            Movie movieEntry = moviesList.get(position);
             ImagePathBuilder pathBuilder = new ImagePathBuilder();
             Picasso.with(context)
-                    .load(pathBuilder.pathBuilder(movieEntry.getMoviePoster()))
+                    .load(pathBuilder.posterPathBuilder(movieEntry.getMoviePoster()))
                     .error(R.drawable.placeholder)
                     .placeholder(R.drawable.placeholder)
                     .into(holder.thumbnailIV);
@@ -53,18 +52,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.CountriesV
 
         @Override
         public int getItemCount() {
-            return ((countriesList != null) && (countriesList.size() != 0) ? countriesList.size() : 1);
+            return ((moviesList != null) && (moviesList.size() != 0) ? moviesList.size() : 1);
         }
 
     /**
      * ViewHolder static class for RecyclerView
      */
-    static class CountriesViewHolder extends RecyclerView.ViewHolder {
+    static class MoviesViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.thumbnail_iv)
         ImageView thumbnailIV;
 
-        CountriesViewHolder(View itemView) {
+        MoviesViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

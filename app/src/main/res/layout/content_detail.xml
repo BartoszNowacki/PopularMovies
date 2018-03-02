@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.detail.DetailActivity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.detail.DetailActivity"
     tools:ignore="ContentDescription">
+
+    <ImageView
+        android:id="@+id/poster_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/placeholder" />
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,81 +28,86 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="0dp">
+            android:paddingTop="0dp"
+            android:background="@color/colorBlackTransparent">
 
-            <ImageView
-                android:id="@+id/poster_iv"
+            <TextView
+                android:id="@+id/release_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/small_margin"
-                android:layout_marginRight="@dimen/small_margin"
-                android:layout_marginLeft="@dimen/small_margin"
-                android:layout_marginTop="@dimen/small_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="@dimen/small_margin"
+                android:textSize="@dimen/text_size_big"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/release_label"
+                tools:text="12.12.2012" />
+
+            <TextView
+                android:id="@+id/release_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="400dp"
+                android:layout_marginStart="@dimen/xbig_margin"
+                android:text="@string/release_date"
+                android:textSize="@dimen/text_size_small"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/placeholder" />
+                tools:text="Realese:" />
 
-    <TextView
-        android:id="@+id/release_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
-        android:layout_marginTop="@dimen/small_margin"
-        android:text="@string/release_date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/poster_iv"
-        tools:text="Realese:" />
-
-    <TextView
-        android:id="@+id/release_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
-        app:layout_constraintBaseline_toBaselineOf="@+id/release_label"
-        app:layout_constraintStart_toEndOf="@+id/release_label"
-        tools:text="12.12.2012" />
-
-    <TextView
-        android:id="@+id/vote_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin"
-        app:layout_constraintBaseline_toBaselineOf="@+id/release_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="9.9" />
+            <TextView
+                android:id="@+id/vote_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:textSize="@dimen/text_size_big"
+                android:layout_marginEnd="@dimen/xbig_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/vote_label"
+                tools:text="9.9" />
 
             <TextView
                 android:id="@+id/vote_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/small_margin"
                 android:text="@string/vote_average"
-                app:layout_constraintBaseline_toBaselineOf="@+id/vote_tv"
-                app:layout_constraintEnd_toStartOf="@+id/vote_tv"
+                android:textSize="@dimen/text_size_small"
+                android:layout_marginEnd="@dimen/xbig_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/release_label"
                 tools:text="Rating:" />
 
-    <TextView
-        android:id="@+id/plot_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
-        android:layout_marginTop="@dimen/big_margin"
-        android:text="@string/plot_synopsis"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/release_label"
-        tools:text="Plot:" />
 
-    <TextView
-        android:id="@+id/plot_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
-        android:layout_marginTop="@dimen/small_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/plot_label"
-        tools:text="The movie..." />
+            <TextView
+                android:id="@+id/plot_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/big_margin"
+                android:layout_marginTop="@dimen/xbig_margin"
+                android:layout_marginEnd="@dimen/big_margin"
+                android:textSize="@dimen/text_size_small"
+                app:layout_constraintTop_toBottomOf="@id/release_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="The movie..." />
+            <FrameLayout
+                android:id="@+id/trailers_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/plot_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                >
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/trailers_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </FrameLayout>
+
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
-</FrameLayout>
+
+</android.support.constraint.ConstraintLayout>

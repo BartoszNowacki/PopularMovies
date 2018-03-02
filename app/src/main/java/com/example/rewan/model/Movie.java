@@ -23,7 +23,9 @@ public class Movie {
         @SerializedName("overview")
         @Expose
         private String plotSynopsis;
-
+        @SerializedName("id")
+        @Expose
+        private String id;
 
         public String getTitle() {
             return title;
@@ -40,6 +42,10 @@ public class Movie {
         public String getPlotSynopsis() {
                 return plotSynopsis;
         }
+        public String getID() {
+                return id;
+        }
+
 
         @Override
         public String toString() {
@@ -49,6 +55,7 @@ public class Movie {
                     ", moviePoster='" + moviePoster + '\'' +
                     ", voteAverage='" + voteAverage + '\'' +
                     ", plotSynopsis='" + moviePoster + '\'' +
+                    ", ID='" + id + '\'' +
                     '}';
         }
         public static class MovieTags {
@@ -57,5 +64,6 @@ public class Movie {
                 public final static String MOVIE_POSTER = "poster";
                 public final static String MOVIE_VOTE = "vote";
                 public final static String MOVIE_PLOT = "plot";
+                public final static String ID = "id";
         }
 }

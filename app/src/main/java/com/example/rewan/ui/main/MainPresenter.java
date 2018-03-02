@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,24 +33,26 @@ public class MainPresenter
     private NetworkHelper networkHelper;
     private DataService dataService;
     private boolean isTopCategory = false;
+    private String LANG;
 
     MainPresenter(DataService dataService, String API_KEY) {
         networkHelper = new NetworkHelper(this);
         this.dataService = dataService;
         this.API_KEY = API_KEY;
+        LANG = Locale.getDefault().getLanguage();
     }
 
     @Override
     public void getMovies(Context context) {
         if (networkHelper.isNetworkAvailable(context)) {
-            makeMovieCall();
+            makeCall();
         } else {
             view.showMessage(R.string.network_disabled);
         }
     }
 
     @Override
-    public void makeMovieCall() {
+    public void makeCall() {
         Call<JsonObject> moviesCall = getSortOrder();
         moviesCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -74,9 +77,9 @@ public class MainPresenter
 
     private Call<JsonObject> getSortOrder() {
         if (isTopCategory) {
-            return dataService.loadPopularMovies(API_KEY);
+            return dataService.loadPopularMovies(API_KEY, LANG);
         } else {
-            return dataService.loadTopMovies(API_KEY);
+            return dataService.loadTopMovies(API_KEY, LANG);
         }
     }
     /**
@@ -110,6 +113,7 @@ public class MainPresenter
         intent.putExtra(Movie.MovieTags.MOVIE_PLOT, movie.getPlotSynopsis());
         intent.putExtra(Movie.MovieTags.MOVIE_POSTER, movie.getMoviePoster());
         intent.putExtra(Movie.MovieTags.MOVIE_VOTE, movie.getVoteAverage());
+        intent.putExtra(Movie.MovieTags.ID, movie.getID());
         return intent;
     }
 }
