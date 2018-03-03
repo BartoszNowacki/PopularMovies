@@ -19,9 +19,10 @@ public interface MainContract {
     }
 
     interface Presenter<V extends MvpView> extends MvpPresenter<V> {
-        Intent configuredIntent(Intent intent, Movie movie);
+        Intent configuredIntent(Intent intent, Movie movie, int position);
         NetworkHelper getReceiver();
         IntentFilter getIntentFilter();
         void getMovies(Context context);
+        String getTransitionName(int position);
     }
 }

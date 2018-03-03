@@ -3,6 +3,7 @@ package com.example.rewan.ui.main;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -88,7 +89,9 @@ public class MainActivity
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this, DetailActivity.class);
-        startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position)));
+//        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                makeSceneTransitionAnimation(this, view, mainPresenter.getTransitionName(position));
+        startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position), position));
     }
 
     /**
@@ -172,4 +175,5 @@ public class MainActivity
     public void showErrorMessage(String errorMessage) {
         Snackbar.make(constraintLayout, R.string.error + errorMessage, Snackbar.LENGTH_LONG).show();
     }
+
 }

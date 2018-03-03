@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 
 /**
- * Adapter for RecyclerView in Main Activity
+ * Adapter for Videos RecyclerView in DetailActivity
  */
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosViewHolder>{
 

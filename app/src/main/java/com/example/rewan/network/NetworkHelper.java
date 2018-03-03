@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient;
  */
 public class NetworkHelper extends BroadcastReceiver {
 
+
     IntentFilter mNetworkIntentFilter;
     NetworkStateDataListener networkStateDataListener;
 

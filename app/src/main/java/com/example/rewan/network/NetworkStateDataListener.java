@@ -1,6 +1,7 @@
 package com.example.rewan.network;
 
 
+import com.example.rewan.utils.CallType;
 
 /**
  * Listener interface for Network state change

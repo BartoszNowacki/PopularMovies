@@ -22,14 +22,24 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="0dp"
-            android:background="@color/colorBlackTransparent">
+            android:background="@color/colorBlackTransparent"
+            android:orientation="vertical">
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/vector_drawable"
+        android:layout_marginTop="540dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:rotation="345"/>
 
             <TextView
                 android:id="@+id/release_tv"
@@ -37,41 +47,57 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_margin"
                 android:textSize="@dimen/text_size_big"
+                app:layout_constraintTop_toBottomOf="@id/title_tv"
+                android:layout_marginTop="@dimen/small_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/release_label"
                 tools:text="12.12.2012" />
 
             <TextView
-                android:id="@+id/release_label"
+                android:id="@+id/title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="400dp"
-                android:layout_marginStart="@dimen/xbig_margin"
                 android:text="@string/release_date"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_big"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/small_margin"
                 app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="460dp"
+                android:layout_marginBottom="@dimen/xxxbig_margin"
                 tools:text="Realese:" />
 
             <TextView
                 android:id="@+id/vote_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:textSize="@dimen/text_size_big"
                 android:layout_marginEnd="@dimen/xbig_margin"
+                android:textSize="@dimen/text_size_big"
+                app:layout_constraintBaseline_toBaselineOf="@id/release_tv"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/vote_label"
                 tools:text="9.9" />
+
+            <RatingBar
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/ratingBarStyleSmall"
+            android:numStars="5"
+            android:stepSize="0.1"
+            android:isIndicator="true"
+            android:layout_marginEnd="@dimen/xbig_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vote_tv"
+                android:layout_marginTop="@dimen/small_margin"
+            />
 
             <TextView
                 android:id="@+id/vote_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/xbig_margin"
                 android:text="@string/vote_average"
                 android:textSize="@dimen/text_size_small"
-                android:layout_marginEnd="@dimen/xbig_margin"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBaseline_toBaselineOf="@id/release_label"
+                app:layout_constraintTop_toBottomOf="@id/rating"
                 tools:text="Rating:" />
 
 
@@ -79,31 +105,49 @@
                 android:id="@+id/plot_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/big_margin"
-                android:layout_marginTop="@dimen/xbig_margin"
                 android:layout_marginEnd="@dimen/big_margin"
-                android:textSize="@dimen/text_size_small"
-                app:layout_constraintTop_toBottomOf="@id/release_label"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/big_margin"
+                android:layout_marginTop="@dimen/xxxbig_margin"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rating"
                 tools:text="The movie..." />
+
             <FrameLayout
-                android:id="@+id/trailers_content"
+                android:id="@+id/videos_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/plot_tv"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/small_margin"
                 android:layout_marginStart="@dimen/small_margin"
                 android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginEnd="@dimen/small_margin"
-                >
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/plot_tv">
 
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/trailers_recycler_view"
+                    android:id="@+id/videos_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/reviews_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/videos_content">
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/reviews_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </FrameLayout>
 
 

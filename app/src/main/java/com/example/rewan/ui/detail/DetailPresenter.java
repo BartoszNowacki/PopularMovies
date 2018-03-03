@@ -2,15 +2,20 @@ package com.example.rewan.ui.detail;
 
 
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.rewan.base.BasePresenter;
+import com.example.rewan.model.BaseModel;
 import com.example.rewan.model.Movie;
+import com.example.rewan.model.Review;
 import com.example.rewan.model.Video;
 import com.example.rewan.network.NetworkHelper;
 import com.example.rewan.network.NetworkStateDataListener;
 import com.example.rewan.retrofit.DataService;
+import com.example.rewan.utils.CallType;
+import com.example.rewan.utils.DateConverter;
 import com.example.rewan.utils.ImagePathBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -52,6 +57,10 @@ class DetailPresenter
         ImagePathBuilder imagePathBuilder = new ImagePathBuilder();
         return imagePathBuilder.posterPathBuilder(endpoint);
     }
+    public String getReleaseYear(String date){
+        DateConverter dateConverter = new DateConverter();
+        return dateConverter.convertDate(date);
+    }
     public String getPoster(){
         return Movie.MovieTags.MOVIE_POSTER;
     }
@@ -67,24 +76,42 @@ class DetailPresenter
     public String getID(){
         return Movie.MovieTags.ID;
     }
+    public String getTransition(){
+        return Movie.MovieTags.TRANSITION;
+    }
     public void setID(String id){
         this.id = id;
     }
 
     @Override
     public void makeCall() {
-        Log.d(TAG, "makeCall: called");
         Call<JsonObject> videosCall = dataService.loadVideos(id, API_KEY, LANG);
-        videosCall.enqueue(new Callback<JsonObject>() {
+        makeCallWithType(videosCall, CallType.VIDEO);
+        Call<JsonObject> reviewsCall = dataService.loadReviews(id, API_KEY);
+        makeCallWithType(reviewsCall, CallType.REVIEW);
+    }
+
+    private void makeCallWithType (Call<JsonObject> typeCall, final CallType callType){
+        typeCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful()) {
-                    List<Video> videosList = convertResponse(response.body());
+                    JsonArray moviesJsonArray = response.body().getAsJsonArray("results");
                     if (isViewAttached()) {
-                        view.setVideosAdapter(videosList);
+                        switch(callType){
+                            case VIDEO:
+                                Log.d(TAG, "onResponse: tbs video");
+                                videosResponse(moviesJsonArray);
+                                break;
+                            case REVIEW:
+                                Log.d(TAG, "onResponse: tbs review");
+                                reviewsResponse(moviesJsonArray);
+                                break;
+                        }
                     }
                 } else {
                     int httpCode = response.code();
+                    Log.d(TAG, "onResponse: error" + httpCode);
                     view.showErrorMessage(String.valueOf(httpCode));
                 }
             }
@@ -95,14 +122,17 @@ class DetailPresenter
             }
         });
     }
-    private List<Video> convertResponse(JsonObject restResponse) {
-        Log.d(TAG, "convertResponse: called");
-        JsonArray moviesJsonArray = restResponse.getAsJsonArray("results");
+    private void videosResponse(JsonArray videosJsonArray){
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Video>>() {
         }.getType();
-
-        return (List<Video>) gson.fromJson(moviesJsonArray, listType);
+        view.setVideosAdapter((List<Video>) gson.fromJson(videosJsonArray, listType));
+    }
+    private void reviewsResponse(JsonArray reviewsJsonArray){
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Review>>() {
+        }.getType();
+        view.setReviewsAdapter((List<Review>) gson.fromJson(reviewsJsonArray, listType));
     }
     public IntentFilter getIntentFilter() {
         return networkHelper.getIntentFilter();
@@ -110,6 +140,10 @@ class DetailPresenter
 
     public NetworkHelper getReceiver() {
         return networkHelper;
+    }
+
+    public float convertToFloat(String vote){
+        return Float.parseFloat(vote)/2;
     }
 
 }

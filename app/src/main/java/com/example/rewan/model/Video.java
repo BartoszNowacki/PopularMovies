@@ -3,11 +3,9 @@ package com.example.rewan.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Rewan on 01.03.2018.
- */
 
-public class Video {
+
+public class Video extends BaseModel{
     @SerializedName("name")
     @Expose
     private String videoTitle;
