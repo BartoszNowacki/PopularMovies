@@ -1,5 +1,6 @@
 package com.example.rewan.ui.detail;
 
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 
 import com.example.rewan.R;
 import com.example.rewan.model.Review;
@@ -198,7 +200,9 @@ public class DetailActivity
 
     @Override
     public void onItemClick(View view, int position) {
-
+        Video videoItem = videosList.get(position);
+        Intent intent = YouTubeStandalonePlayer.createVideoIntent(this, getString(R.string.youtube_api_key), videoItem.getVideoEndpoint(), 0, true, false);
+startActivity(intent);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
