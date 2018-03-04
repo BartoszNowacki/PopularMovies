@@ -11,6 +11,7 @@
 
     <ImageView
         android:id="@+id/poster_iv"
+        android:transitionName="@string/thumbnail_transition_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"

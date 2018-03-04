@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v4.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +37,7 @@ import retrofit2.Retrofit;
 
 public class MainActivity
         extends AppCompatActivity
-        implements MainContract.View, OnRecyclerClickListener {
+        implements MainContract.View, MoviesAdapter.MovieAdapterOnClickHandler {
 
     @BindView(R.id.countries_recycler_view)
     RecyclerView recyclerView;
@@ -86,13 +87,14 @@ public class MainActivity
         return true;
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        Intent intent = new Intent(this, DetailActivity.class);
+//    @Override
+//    public void onItemClick(View thumbnail, int position) {
+//        Intent intent = new Intent(this, DetailActivity.class);
+//        Pair<View, String> p1 = Pair.create(thumbnail.getRootView(R.id.thumbnail_iv), getString(R.string.thumbnail_transition_name));
 //        ActivityOptionsCompat options = ActivityOptionsCompat.
-//                makeSceneTransitionAnimation(this, view, mainPresenter.getTransitionName(position));
-        startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position), position));
-    }
+//                makeSceneTransitionAnimation(this, p1);
+//        startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position), position), options.toBundle());
+//    }
 
     /**
      * Configure spinner for Sort order
@@ -137,7 +139,7 @@ public class MainActivity
         recyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 2);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
+//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
@@ -158,7 +160,7 @@ public class MainActivity
     @Override
     public void setMoviesAdapter(List<Movie> movies) {
         moviesList = movies;
-        MoviesAdapter moviesAdapter = new MoviesAdapter(movies, this);
+        MoviesAdapter moviesAdapter = new MoviesAdapter(movies, this, this);
         recyclerView.setAdapter(moviesAdapter);
     }
 
@@ -176,4 +178,12 @@ public class MainActivity
         Snackbar.make(constraintLayout, R.string.error + errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onClick(int movieId, View thumbnail, int position) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        Pair<View, String> p1 = Pair.create(thumbnail, getString(R.string.thumbnail_transition_name));
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, p1);
+        startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position), position), options.toBundle());
+    }
 }

@@ -29,11 +29,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
         private List<Movie> moviesList;
         private Context context;
+         private final MovieAdapterOnClickHandler mClickHandler;
 
-        public MoviesAdapter(List<Movie> moviesList, Context context) {
+    public interface MovieAdapterOnClickHandler {
+        void onClick(int movieId, View thumbnail, int position);
+    }
+
+        public MoviesAdapter(List<Movie> moviesList, Context context, MovieAdapterOnClickHandler clickHandler) {
             this.moviesList = moviesList;
             this.context = context;
+            this.mClickHandler = clickHandler;
         }
+
 
         @Override
         public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,7 +69,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     /**
      * ViewHolder static class for RecyclerView
      */
-    static class MoviesViewHolder extends RecyclerView.ViewHolder {
+    class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.thumbnail_iv)
         ImageView thumbnailIV;
@@ -70,6 +77,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         MoviesViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            Movie movieItem = moviesList.get(position);
+            int movieId = Integer.parseInt(movieItem.getID());
+            mClickHandler.onClick(movieId, thumbnailIV, position);
         }
     }
 }

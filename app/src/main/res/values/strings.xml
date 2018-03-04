@@ -23,5 +23,7 @@
     <string name="single_activity_name">Details</string>
 
 
+    <string name="thumbnail_transition_name">Thumbnail transition</string>
+
 
 </resources>

@@ -142,6 +142,7 @@ public class DetailActivity
     }
 
     public void setView(){
+        Log.d(TAG, "setView: called");
         setTitle(title);
         titleTV.setText(title);
         releaseTV.setText(detailPresenter.getReleaseYear(release));
@@ -172,7 +173,7 @@ public class DetailActivity
         }
     }
     public void setReviewsAdapter(List<Review> reviews) {
-        Log.d(TAG, "setReviewAdapter: called" +reviews);
+        Log.d(TAG, "setReviewAdapter: called");
         reviewsList = reviews;
         if(!reviewsList.isEmpty()) {
             ReviewsAdapter reviewsAdapter = new ReviewsAdapter(reviews);
@@ -183,7 +184,6 @@ public class DetailActivity
         reviewsRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        reviewsRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, reviewsRecyclerView, this));
         reviewsRecyclerView.setLayoutManager(layoutManager);
         reviewsRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
@@ -200,6 +200,7 @@ public class DetailActivity
 
     @Override
     public void onItemClick(View view, int position) {
+        Log.d(TAG, "onItemClick:  called");
         Video videoItem = videosList.get(position);
         Intent intent = YouTubeStandalonePlayer.createVideoIntent(this, getString(R.string.youtube_api_key), videoItem.getVideoEndpoint(), 0, true, false);
 startActivity(intent);
