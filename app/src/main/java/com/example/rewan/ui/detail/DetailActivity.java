@@ -1,7 +1,10 @@
 package com.example.rewan.ui.detail;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,9 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+
+import com.example.rewan.data.MovieContract;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 
 import com.example.rewan.R;
@@ -61,6 +68,9 @@ public class DetailActivity
     RecyclerView reviewsRecyclerView;
     @BindView(R.id.rating)
     RatingBar ratingBar;
+    @BindView(R.id.favorite_button)
+    ToggleButton favoriteBTN;
+
 
     String TAG = "DetailMovie";
     DetailPresenter detailPresenter;
@@ -70,7 +80,8 @@ public class DetailActivity
     String release;
     String vote;
     String plot;
-    String id;
+    String movieID;
+    int id;
     List<Video> videosList;
     List<Review> reviewsList;
     private DataService dataService;
@@ -87,6 +98,7 @@ public class DetailActivity
         setupRetrofit();
         setupVideosRecyclerView();
         setupReviewsRecyclerView();
+        setupFavoriteButton();
 
         String apiKey = getString(R.string.movie_api_key);
         detailPresenter = new DetailPresenter(dataService, apiKey);
@@ -97,7 +109,7 @@ public class DetailActivity
         } else {
             getFromInstanceState(savedInstanceState);
         }
-        detailPresenter.setID(id);
+        detailPresenter.setID(movieID);
         setView();
     }
 
@@ -123,7 +135,7 @@ public class DetailActivity
             vote = extras.getString(detailPresenter.getVote());
             plot = extras.getString(detailPresenter.getPlot());
             posterEndpoint = extras.getString(detailPresenter.getPoster());
-            id = extras.getString(detailPresenter.getID());
+            movieID = extras.getString(detailPresenter.getID());
             posterIV.setTransitionName(extras.getString(detailPresenter.getTransition()));
         }
     }
@@ -133,7 +145,7 @@ public class DetailActivity
         vote = (String) savedInstanceState.getSerializable(detailPresenter.getVote());
         plot = (String) savedInstanceState.getSerializable(detailPresenter.getPlot());
         posterEndpoint = (String) savedInstanceState.getSerializable(detailPresenter.getPoster());
-        id = (String) savedInstanceState.getSerializable(detailPresenter.getID());
+        movieID = (String) savedInstanceState.getSerializable(detailPresenter.getID());
         posterIV.setTransitionName((String) savedInstanceState.getSerializable(detailPresenter.getID()));
     }
     public void setupRetrofit() {
@@ -186,6 +198,39 @@ public class DetailActivity
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         reviewsRecyclerView.setLayoutManager(layoutManager);
         reviewsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void setupFavoriteButton(){
+        favoriteBTN.setChecked(false);
+        favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
+        favoriteBTN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
+                    addToDataBase();
+                } else {
+                    favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
+                    deleteFromDataBase();
+                }
+            }
+        });
+    }
+
+    private void addToDataBase(){
+        ContentResolver contentResolver = getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
+        values.put(MovieContract.MovieEntry.COLUMN_RELEASE, release);
+        values.put(MovieContract.MovieEntry.COLUMN_POSTER, posterEndpoint);
+        values.put(MovieContract.MovieEntry.COLUMN_VOTE, vote);
+        values.put(MovieContract.MovieEntry.COLUMN_PLOT, plot);
+        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieID);
+        contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, values);
+    }
+
+    private void deleteFromDataBase(){
+        getContentResolver().delete(MovieContract.MovieEntry.buildMovieUriWithId(id), null, null);
     }
 
     @Override

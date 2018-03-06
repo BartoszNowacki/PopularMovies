@@ -15,12 +15,17 @@
     <string name="error">Error with code: </string>
     <string name="sort">sort</string>
 
-    <!-- Model -->
+    <!-- Spinner items -->
     <string name="top_rated">Top rated</string>
     <string name="popular">Popular</string>
+    <string name="favorite">Favorite</string>
+
+
+
 
 
     <string name="single_activity_name">Details</string>
+    <string name="content_authority">translatable="false">com.example.rewan</string>
 
 
     <string name="thumbnail_transition_name">Thumbnail transition</string>

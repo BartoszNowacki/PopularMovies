@@ -53,6 +53,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="12.12.2012" />
 
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/favorite_button"
+                android:textOn=""
+                android:textOff=""
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/big_margin"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/big_margin"
+                />
+
             <TextView
                 android:id="@+id/title_tv"
                 android:layout_width="wrap_content"

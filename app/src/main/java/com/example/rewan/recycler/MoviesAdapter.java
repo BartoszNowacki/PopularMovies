@@ -58,7 +58,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     .error(R.drawable.placeholder)
                     .placeholder(R.drawable.placeholder)
                     .into(holder.thumbnailIV);
-//            holder.thumbnailIV.setTransitionName(Movie.MovieTags.TRANSITION + position);
         }
 
         @Override

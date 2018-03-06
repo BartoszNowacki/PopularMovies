@@ -1,9 +1,15 @@
 package com.example.rewan.ui.main;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,11 +25,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.rewan.data.MovieContract;
 import com.example.rewan.model.Movie;
 import com.example.rewan.R;
+import com.example.rewan.recycler.FavoriteMovieAdapter;
 import com.example.rewan.recycler.MoviesAdapter;
-import com.example.rewan.recycler.OnRecyclerClickListener;
-import com.example.rewan.recycler.RecyclerItemClickListener;
 import com.example.rewan.retrofit.DataService;
 import com.example.rewan.retrofit.RetrofitHelper;
 import com.example.rewan.ui.detail.DetailActivity;
@@ -37,7 +43,7 @@ import retrofit2.Retrofit;
 
 public class MainActivity
         extends AppCompatActivity
-        implements MainContract.View, MoviesAdapter.MovieAdapterOnClickHandler {
+        implements MainContract.View, MoviesAdapter.MovieAdapterOnClickHandler, FavoriteMovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.countries_recycler_view)
     RecyclerView recyclerView;
@@ -51,6 +57,29 @@ public class MainActivity
     List<Movie> moviesList;
     private DataService dataService;
     MainPresenter mainPresenter;
+    private FavoriteMovieAdapter favoriteAdapter;
+    private int mPosition = RecyclerView.NO_POSITION;
+
+    public static final String[] MOVIE_LIST_PROJECTION = {
+            MovieContract.MovieEntry._ID,
+            MovieContract.MovieEntry.COLUMN_TITLE,
+            MovieContract.MovieEntry.COLUMN_RELEASE,
+            MovieContract.MovieEntry.COLUMN_POSTER,
+            MovieContract.MovieEntry.COLUMN_VOTE,
+            MovieContract.MovieEntry.COLUMN_PLOT,
+            MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+    };
+
+    public static final int INDEX_ID = 0;
+    public static final int INDEX_MOVIE_TITLE = 1;
+    public static final int INDEX_MOVIE_RELEADE = 2;
+    public static final int INDEX_MOVIE_POSTER = 3;
+    public static final int INDEX_MOVIE_VOTE = 4;
+    public static final int INDEX_MOVIE_PLOT = 5;
+    public static final int INDEX_MOVIE_ID = 6;
+
+
+    private static final int ID_MOVIE_LOADER = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +94,8 @@ public class MainActivity
         mainPresenter = new MainPresenter(dataService, apiKey);
         mainPresenter.attachView(this);
         mainPresenter.getMovies(this);
+
+        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
     }
 
     @Override
@@ -87,20 +118,12 @@ public class MainActivity
         return true;
     }
 
-//    @Override
-//    public void onItemClick(View thumbnail, int position) {
-//        Intent intent = new Intent(this, DetailActivity.class);
-//        Pair<View, String> p1 = Pair.create(thumbnail.getRootView(R.id.thumbnail_iv), getString(R.string.thumbnail_transition_name));
-//        ActivityOptionsCompat options = ActivityOptionsCompat.
-//                makeSceneTransitionAnimation(this, p1);
-//        startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position), position), options.toBundle());
-//    }
-
     /**
      * Configure spinner for Sort order
      */
     private void configureSortSpinner() {
         final MenuItem item = menu.findItem(R.id.sort);
+        final String favorite = getString(R.string.favorite);
         sortSpinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this, R.array.sort_criteria_array, android.R.layout.simple_spinner_item);
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,8 +132,12 @@ public class MainActivity
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedItem = sortSpinner.getSelectedItem().toString();
-                checkSortOrder(selectedItem);
-                mainPresenter.getMovies(MainActivity.this);
+                if (favorite==selectedItem){
+                    setFavoriteAdapter();
+                } else {
+                    checkSortOrder(selectedItem);
+                    mainPresenter.getMovies(MainActivity.this);
+                }
             }
 
             @Override
@@ -139,7 +166,6 @@ public class MainActivity
         recyclerView.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 2);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
@@ -164,6 +190,11 @@ public class MainActivity
         recyclerView.setAdapter(moviesAdapter);
     }
 
+    public void setFavoriteAdapter(){
+        favoriteAdapter = new FavoriteMovieAdapter(this, this);
+        recyclerView.setAdapter(favoriteAdapter);
+    }
+
     @Override
     public void showMessage(int messageId) {
         switch (messageId) {
@@ -185,5 +216,37 @@ public class MainActivity
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, p1);
         startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position), position), options.toBundle());
+    }
+
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+        switch (loaderId) {
+            case ID_MOVIE_LOADER:
+                return new CursorLoader(
+                        this,
+                        MovieContract.MovieEntry.CONTENT_URI,
+                        MOVIE_LIST_PROJECTION,
+                        null,
+                        null,
+                        MovieContract.MovieEntry.COLUMN_RELEASE + " DESC");
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
+        }
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        if (data != null) {
+            favoriteAdapter.swapCursor(data);
+            if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+            recyclerView.smoothScrollToPosition(mPosition);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        favoriteAdapter.swapCursor(null);
     }
 }

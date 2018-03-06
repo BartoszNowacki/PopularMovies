@@ -26,6 +26,10 @@
             android:theme="@style/AppTheme"
             android:parentActivityName=".ui.main.MainActivity">
         </activity>
+        <provider
+            android:name=".data.MovieProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false" />
     </application>
 
 </manifest>
