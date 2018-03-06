@@ -181,8 +181,31 @@ public class MovieProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return returnUri;
-
     }
+        
+        public static boolean checkIfInDB(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+            final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+            switch (sUriMatcher.match(uri)) {
+                case CODE_MOVIE_WITH_ID:
+                    String id = uri.getLastPathSegment();
+                    String[] selectionArguments = new String[] {id};
+
+                    cursor = db.query(MovieEntry.TABLE_NAME,
+                            projection,
+                            MovieEntry.COLUMN_MOVIE_ID+ " = ?",
+                            selectionArguments,
+                            null,
+                            null,
+                            sortOrder);
+                        if(cursor.getCount() <= 0){
+                                cursor.close();
+                                return false;
+                        }
+                    cursor.close();
+                    return true;
+                    break;
+            }
+        }
 
         @Override
         public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
