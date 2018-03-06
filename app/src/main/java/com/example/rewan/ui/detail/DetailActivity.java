@@ -232,6 +232,10 @@ public class DetailActivity
     private void deleteFromDataBase(){
         getContentResolver().delete(MovieContract.MovieEntry.buildMovieUriWithId(id), null, null);
     }
+    
+    private boolean checkIsFavorite(){
+    return getContentResolver().checkIfInDB(MovieContract.MovieEntry.buildMovieUriWithId(id), null, null, null, null);
+    }
 
     @Override
     public void showMessage(int messageId) {
