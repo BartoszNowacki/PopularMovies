@@ -25,7 +25,7 @@
 
 
     <string name="single_activity_name">Details</string>
-    <string name="content_authority">translatable="false">com.example.rewan</string>
+    <string name="content_authority" translatable="false">com.example.rewan</string>
 
 
     <string name="thumbnail_transition_name">Thumbnail transition</string>
