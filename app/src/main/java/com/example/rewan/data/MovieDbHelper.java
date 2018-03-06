@@ -45,14 +45,14 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
 
 
-                        MovieEntry._ID               + " STRING PRIMARY KEY AUTOINCREMENT, " +
-                        MovieEntry.COLUMN_TITLE       + " STRING NOT NULL, "                 +
-                        MovieEntry.COLUMN_RELEASE+ " STRING NOT NULL,"                  +
-                        MovieEntry.COLUMN_POSTER       + " STRING NOT NULL, "                 +
-                        MovieEntry.COLUMN_VOTE + " STRING NOT NULL,"                  +
-                        MovieEntry.COLUMN_PLOT + " STRING NOT NULL,"                  +
-                        MovieEntry.COLUMN_MOVIE_ID + " STRING NOT NULL,"                  +
-                        ") ON CONFLICT REPLACE);";
+                        MovieEntry._ID                + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        MovieEntry.COLUMN_TITLE       + " TEXT NOT NULL, "                 +
+                        MovieEntry.COLUMN_RELEASE     + " TEXT NOT NULL,"                  +
+                        MovieEntry.COLUMN_POSTER      + " TEXT NOT NULL, "                 +
+                        MovieEntry.COLUMN_VOTE        + " TEXT NOT NULL,"                  +
+                        MovieEntry.COLUMN_PLOT        + " TEXT NOT NULL,"                  +
+                        MovieEntry.COLUMN_MOVIE_ID    + " TEXT NOT NULL,"                  +
+                        " UNIQUE (" + MovieEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
 
 
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);

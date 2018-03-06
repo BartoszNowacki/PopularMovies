@@ -3,6 +3,7 @@ package com.example.rewan.ui.detail;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.rewan.data.MovieContract;
+import com.example.rewan.ui.BaseActivity;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 
 import com.example.rewan.R;
@@ -45,7 +47,7 @@ import retrofit2.Retrofit;
  * Class for details of Movie object
  */
 public class DetailActivity
-        extends AppCompatActivity
+        extends BaseActivity
         implements DetailContract.View, OnRecyclerClickListener {
 
     @BindView(R.id.poster_iv)
@@ -81,7 +83,7 @@ public class DetailActivity
     String vote;
     String plot;
     String movieID;
-    int id;
+    String selection;
     List<Video> videosList;
     List<Review> reviewsList;
     private DataService dataService;
@@ -98,7 +100,6 @@ public class DetailActivity
         setupRetrofit();
         setupVideosRecyclerView();
         setupReviewsRecyclerView();
-        setupFavoriteButton();
 
         String apiKey = getString(R.string.movie_api_key);
         detailPresenter = new DetailPresenter(dataService, apiKey);
@@ -109,6 +110,7 @@ public class DetailActivity
         } else {
             getFromInstanceState(savedInstanceState);
         }
+        setupFavoriteButton();
         detailPresenter.setID(movieID);
         setView();
     }
@@ -200,24 +202,32 @@ public class DetailActivity
         reviewsRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private void setupFavoriteButton(){
-        favoriteBTN.setChecked(false);
-        favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
+    private void setupFavoriteButton() {
+        if (IsFavorite()){
+            favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
+            favoriteBTN.setChecked(true);
+        }else {
+            favoriteBTN.setChecked(false);
+            favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
+        }
         favoriteBTN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
                     addToDataBase();
+
                 } else {
                     favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
-                    deleteFromDataBase();
-                }
-            }
-        });
+        deleteFromDataBase();
     }
+    String[] projection = {MovieContract.MovieEntry.COLUMN_TITLE};
+                Log.d(TAG, "setupFavoriteButton: " + getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, projection, null, null,null,null));
+}
+        });
+                }
 
-    private void addToDataBase(){
+private void addToDataBase(){
         ContentResolver contentResolver = getContentResolver();
         ContentValues values = new ContentValues();
         values.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
@@ -230,11 +240,27 @@ public class DetailActivity
     }
 
     private void deleteFromDataBase(){
-        getContentResolver().delete(MovieContract.MovieEntry.buildMovieUriWithId(id), null, null);
+        getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, selection, null);
     }
     
-    private boolean checkIsFavorite(){
-    return getContentResolver().checkIfInDB(MovieContract.MovieEntry.buildMovieUriWithId(id), null, null, null, null);
+    private boolean IsFavorite(){
+        selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieID;
+        Cursor cursor = getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                MOVIE_LIST_PROJECTION,
+                selection,
+                null,
+                null
+                );
+        Log.d(TAG, "IsFavorite: " + cursor);
+        if (cursor.getCount() <= 0) {
+            Log.d(TAG, "IsFavorite: tbs false");
+            cursor.close();
+            return false;
+        }
+        Log.d(TAG, "IsFavorite: tbs true");
+        cursor.close();
+        return true;
     }
 
     @Override
@@ -254,6 +280,7 @@ public class DetailActivity
         Intent intent = YouTubeStandalonePlayer.createVideoIntent(this, getString(R.string.youtube_api_key), videoItem.getVideoEndpoint(), 0, true, false);
 startActivity(intent);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

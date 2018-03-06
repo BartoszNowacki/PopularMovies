@@ -3,11 +3,13 @@ package com.example.rewan.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 
 import com.example.rewan.R;
 import com.example.rewan.base.BasePresenter;
+import com.example.rewan.data.MovieContract;
 import com.example.rewan.model.Movie;
 import com.example.rewan.network.NetworkHelper;
 import com.example.rewan.network.NetworkStateDataListener;
@@ -79,9 +81,9 @@ public class MainPresenter
 
     private Call<JsonObject> getSortOrder() {
         if (isTopCategory) {
-            return dataService.loadPopularMovies(API_KEY, LANG);
-        } else {
             return dataService.loadTopMovies(API_KEY, LANG);
+        } else {
+            return dataService.loadPopularMovies(API_KEY, LANG);
         }
     }
     /**
@@ -117,9 +119,9 @@ public class MainPresenter
         intent.putExtra(Movie.MovieTags.MOVIE_POSTER, movie.getMoviePoster());
         intent.putExtra(Movie.MovieTags.MOVIE_VOTE, movie.getVoteAverage());
         intent.putExtra(Movie.MovieTags.ID, movie.getID());
-        intent.putExtra(Movie.MovieTags.TRANSITION, movie.getID()+position);
         return intent;
     }
+
     @Override
     public String getTransitionName(int position){
         return Movie.MovieTags.TRANSITION + position;

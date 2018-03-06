@@ -52,6 +52,11 @@ public class MovieContract {
                     .appendPath(Integer.toString(id))
                     .build();
         }
+        public static Uri buildMovieUriWithMovieId(String movieId){
+            return CONTENT_URI.buildUpon()
+                    .appendPath(movieId)
+                    .build();
+        }
     }
 
 }

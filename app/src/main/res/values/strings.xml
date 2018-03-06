@@ -29,6 +29,7 @@
 
 
     <string name="thumbnail_transition_name">Thumbnail transition</string>
+    <string name="rating">Rating:</string>
 
 
 </resources>

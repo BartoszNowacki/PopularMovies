@@ -5,6 +5,7 @@
     <dimen name="xbig_margin">24dp</dimen>
     <dimen name="xxbig_margin">30dp</dimen>
     <dimen name="xxxbig_margin">40dp</dimen>
+    <dimen name="xxxxbig_margin">90dp</dimen>
 
 
 

@@ -32,6 +32,8 @@ public class MovieProvider extends ContentProvider {
 
         public static final int CODE_MOVIE = 100;
         public static final int CODE_MOVIE_WITH_ID = 101;
+         public static final int CODE_MOVIE_WITH_MOVIEID = 102;
+
 
         private static final UriMatcher sUriMatcher = buildUriMatcher();
         private MovieDbHelper mOpenHelper;
@@ -110,6 +112,20 @@ public class MovieProvider extends ContentProvider {
 
                     cursor = db.query(MovieEntry.TABLE_NAME,
                             projection,
+                            MovieEntry._ID+ " = ?",
+                            selectionArguments,
+                            null,
+                            null,
+                            sortOrder);
+
+                    break;
+                }
+                case CODE_MOVIE_WITH_MOVIEID: {
+                    String id = uri.getLastPathSegment();
+                    String[] selectionArguments = new String[] {id};
+
+                    cursor = db.query(MovieEntry.TABLE_NAME,
+                            projection,
                             MovieEntry.COLUMN_MOVIE_ID+ " = ?",
                             selectionArguments,
                             null,
@@ -118,7 +134,6 @@ public class MovieProvider extends ContentProvider {
 
                     break;
                 }
-
                 default:
                     throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -182,30 +197,6 @@ public class MovieProvider extends ContentProvider {
         }
         return returnUri;
     }
-        
-        public static boolean checkIfInDB(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-            final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-            switch (sUriMatcher.match(uri)) {
-                case CODE_MOVIE_WITH_ID:
-                    String id = uri.getLastPathSegment();
-                    String[] selectionArguments = new String[] {id};
-
-                    cursor = db.query(MovieEntry.TABLE_NAME,
-                            projection,
-                            MovieEntry.COLUMN_MOVIE_ID+ " = ?",
-                            selectionArguments,
-                            null,
-                            null,
-                            sortOrder);
-                        if(cursor.getCount() <= 0){
-                                cursor.close();
-                                return false;
-                        }
-                    cursor.close();
-                    return true;
-                    break;
-            }
-        }
 
         @Override
         public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {

@@ -3,6 +3,7 @@ package com.example.rewan.recycler;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,11 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
     private Cursor mCursor;
 
     public interface MovieAdapterOnClickHandler {
-        void onClick(int movieId, View thumbnail, int position);
+        void onFavoriteClick(String movieId, View thumbnail, int position);
     }
 
     public FavoriteMovieAdapter(Context context, MovieAdapterOnClickHandler clickHandler) {
+        Log.d("tbs", "FavoriteMovieAdapter: ");
         this.mContext = context;
         this.mClickHandler = clickHandler;
     }
@@ -40,7 +42,6 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-
         mCursor.moveToPosition(position);
         String posterPath = mCursor.getString(MainActivity.INDEX_MOVIE_POSTER);
         ImagePathBuilder pathBuilder = new ImagePathBuilder();
@@ -77,8 +78,9 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
         public void onClick(View view) {
             int position = getAdapterPosition();
             mCursor.moveToPosition(position);
-            int movieId = mCursor.getInt(MainActivity.INDEX_ID);
-            mClickHandler.onClick(movieId, thumbnailIV, position);
+            String movieId = mCursor.getString(MainActivity.INDEX_MOVIE_ID);
+            Log.d("tbs", "onClick: " + movieId);
+            mClickHandler.onFavoriteClick(movieId, thumbnailIV, position);
         }
     }
 

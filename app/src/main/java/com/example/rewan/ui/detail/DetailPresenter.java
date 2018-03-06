@@ -3,6 +3,7 @@ package com.example.rewan.ui.detail;
 
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -57,7 +58,7 @@ class DetailPresenter
         ImagePathBuilder imagePathBuilder = new ImagePathBuilder();
         return imagePathBuilder.posterPathBuilder(endpoint);
     }
-    public String getReleaseYear(String date){
+    String getReleaseYear(String date){
         DateConverter dateConverter = new DateConverter();
         return dateConverter.convertDate(date);
     }
@@ -73,13 +74,13 @@ class DetailPresenter
     public String getVote(){
         return Movie.MovieTags.MOVIE_VOTE;
     }
-    public String getID(){
+    String getID(){
         return Movie.MovieTags.ID;
     }
-    public String getTransition(){
+    String getTransition(){
         return Movie.MovieTags.TRANSITION;
     }
-    public void setID(String id){
+    void setID(String id){
         this.id = id;
     }
 
@@ -134,16 +135,24 @@ class DetailPresenter
         }.getType();
         view.setReviewsAdapter((List<Review>) gson.fromJson(reviewsJsonArray, listType));
     }
-    public IntentFilter getIntentFilter() {
+    IntentFilter getIntentFilter() {
         return networkHelper.getIntentFilter();
     }
 
-    public NetworkHelper getReceiver() {
+    NetworkHelper getReceiver() {
         return networkHelper;
     }
 
     public float convertToFloat(String vote){
         return Float.parseFloat(vote)/2;
+    }
+    public boolean checkFavorite(Cursor cursor){
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 
 }
