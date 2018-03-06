@@ -15,21 +15,19 @@
  */
 package com.example.rewan.data;
 
-import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 
 /**
- * Defines table and column names for the weather database. This class is not necessary, but keeps
- * the code organized.
+ * Defines table and column names for the movie database.
  */
 public class MovieContract {
 
 
-    public static final String CONTENT_AUTHORITY = "com.example.rewan";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-    public static final String PATH_MOVIE = "movie";
+    static final String CONTENT_AUTHORITY = "com.example.rewan";
+    static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    static final String PATH_MOVIE = "movie";
 
     public static final class MovieEntry implements BaseColumns {
 
@@ -37,7 +35,7 @@ public class MovieContract {
                 .appendPath(PATH_MOVIE)
                 .build();
 
-        public static final String TABLE_NAME = "movie";
+        static final String TABLE_NAME = "movie";
 
 
         public static final String COLUMN_TITLE = "title";
@@ -47,14 +45,9 @@ public class MovieContract {
         public static final String COLUMN_PLOT= "plot";
         public static final String COLUMN_MOVIE_ID = "movie_id";
 
-        public static Uri buildMovieUriWithId(int id){
+        static Uri buildMovieUriWithId(int id){
             return CONTENT_URI.buildUpon()
                     .appendPath(Integer.toString(id))
-                    .build();
-        }
-        public static Uri buildMovieUriWithMovieId(String movieId){
-            return CONTENT_URI.buildUpon()
-                    .appendPath(movieId)
                     .build();
         }
     }

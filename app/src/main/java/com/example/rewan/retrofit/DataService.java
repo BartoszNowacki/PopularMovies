@@ -20,7 +20,7 @@ public interface DataService {
     Call<JsonObject> loadTopMovies(@Query("api_key") String api_key, @Query("language") String lang);
 
     @GET("/3/movie/{id}/videos")
-    Call<JsonObject> loadVideos(@Path(value = "id", encoded = true) String movieID, @Query("api_key") String api_key, @Query("language") String lang);
+    Call<JsonObject> loadVideos(@Path(value = "id", encoded = true) String movieID, @Query("api_key") String api_key);
 
     @GET("/3/movie/{id}/reviews")
     Call<JsonObject> loadReviews(@Path(value = "id", encoded = true) String movieID, @Query("api_key") String api_key);

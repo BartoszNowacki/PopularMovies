@@ -1,18 +1,4 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.example.rewan.data;
 
 import android.content.ContentProvider;
@@ -23,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.example.rewan.data.MovieContract.MovieEntry;
 
@@ -32,7 +17,6 @@ public class MovieProvider extends ContentProvider {
 
         public static final int CODE_MOVIE = 100;
         public static final int CODE_MOVIE_WITH_ID = 101;
-         public static final int CODE_MOVIE_WITH_MOVIEID = 102;
 
 
         private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -113,20 +97,6 @@ public class MovieProvider extends ContentProvider {
                     cursor = db.query(MovieEntry.TABLE_NAME,
                             projection,
                             MovieEntry._ID+ " = ?",
-                            selectionArguments,
-                            null,
-                            null,
-                            sortOrder);
-
-                    break;
-                }
-                case CODE_MOVIE_WITH_MOVIEID: {
-                    String id = uri.getLastPathSegment();
-                    String[] selectionArguments = new String[] {id};
-
-                    cursor = db.query(MovieEntry.TABLE_NAME,
-                            projection,
-                            MovieEntry.COLUMN_MOVIE_ID+ " = ?",
                             selectionArguments,
                             null,
                             null,

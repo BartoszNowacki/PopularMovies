@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 
 
-public class Review extends BaseModel{
+public class Review {
     @SerializedName("author")
     @Expose
     private String reviewAuthor;

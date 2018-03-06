@@ -2,13 +2,11 @@ package com.example.rewan.ui.detail;
 
 
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.rewan.base.BasePresenter;
-import com.example.rewan.model.BaseModel;
 import com.example.rewan.model.Movie;
 import com.example.rewan.model.Review;
 import com.example.rewan.model.Video;
@@ -77,16 +75,13 @@ class DetailPresenter
     String getID(){
         return Movie.MovieTags.ID;
     }
-    String getTransition(){
-        return Movie.MovieTags.TRANSITION;
-    }
     void setID(String id){
         this.id = id;
     }
 
     @Override
     public void makeCall() {
-        Call<JsonObject> videosCall = dataService.loadVideos(id, API_KEY, LANG);
+        Call<JsonObject> videosCall = dataService.loadVideos(id, API_KEY);
         makeCallWithType(videosCall, CallType.VIDEO);
         Call<JsonObject> reviewsCall = dataService.loadReviews(id, API_KEY);
         makeCallWithType(reviewsCall, CallType.REVIEW);
@@ -146,13 +141,4 @@ class DetailPresenter
     public float convertToFloat(String vote){
         return Float.parseFloat(vote)/2;
     }
-    public boolean checkFavorite(Cursor cursor){
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
 }

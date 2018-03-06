@@ -1,18 +1,13 @@
 package com.example.rewan.recycler;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rewan.R;
-import com.example.rewan.model.Movie;
 import com.example.rewan.model.Review;
-import com.example.rewan.utils.ImagePathBuilder;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 

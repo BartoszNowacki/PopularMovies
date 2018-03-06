@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rewan.R;
-import com.example.rewan.model.Movie;
 import com.example.rewan.model.Video;
 import com.example.rewan.utils.ImagePathBuilder;
 import com.squareup.picasso.Picasso;
@@ -57,7 +56,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosView
             return ((videosList != null) && (videosList.size() != 0) ? videosList.size() : 1);
         }
 
-        public String adjustStringLength(String title){
+        private String adjustStringLength(String title){
             if (title.length()>20){
                 return title.substring(0,20) + "...";
             }

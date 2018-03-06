@@ -23,6 +23,5 @@ public interface MainContract {
         NetworkHelper getReceiver();
         IntentFilter getIntentFilter();
         void getMovies(Context context);
-        String getTransitionName(int position);
     }
 }

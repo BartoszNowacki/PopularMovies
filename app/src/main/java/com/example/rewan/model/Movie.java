@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Model for Movie feed
  */
-public class Movie extends BaseModel{
+public class Movie {
 
         @SerializedName("title")
         @Expose
@@ -65,6 +65,5 @@ public class Movie extends BaseModel{
                 public final static String MOVIE_VOTE = "vote";
                 public final static String MOVIE_PLOT = "plot";
                 public final static String ID = "id";
-                public final static String TRANSITION = "transition";
         }
 }

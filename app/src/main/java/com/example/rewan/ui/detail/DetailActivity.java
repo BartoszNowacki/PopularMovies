@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -127,9 +126,9 @@ public class DetailActivity
         unregisterReceiver(detailPresenter.getReceiver());
     }
 
-    void getFromExtras(){
+    void getFromExtras() {
         Bundle extras = getIntent().getExtras();
-        if(extras == null) {
+        if (extras == null) {
             Log.d(TAG, "onCreate:  no extra");
         } else {
             title = extras.getString(detailPresenter.getTitle());
@@ -138,10 +137,10 @@ public class DetailActivity
             plot = extras.getString(detailPresenter.getPlot());
             posterEndpoint = extras.getString(detailPresenter.getPoster());
             movieID = extras.getString(detailPresenter.getID());
-            posterIV.setTransitionName(extras.getString(detailPresenter.getTransition()));
         }
     }
-    void getFromInstanceState (Bundle savedInstanceState){
+
+    void getFromInstanceState(Bundle savedInstanceState) {
         title = (String) savedInstanceState.getSerializable(detailPresenter.getTitle());
         release = (String) savedInstanceState.getSerializable(detailPresenter.getRelease());
         vote = (String) savedInstanceState.getSerializable(detailPresenter.getVote());
@@ -150,12 +149,13 @@ public class DetailActivity
         movieID = (String) savedInstanceState.getSerializable(detailPresenter.getID());
         posterIV.setTransitionName((String) savedInstanceState.getSerializable(detailPresenter.getID()));
     }
+
     public void setupRetrofit() {
         Retrofit retrofit = ((RetrofitHelper) getApplication()).getRetrofitInstance();
         dataService = retrofit.create(DataService.class);
     }
 
-    public void setView(){
+    public void setView() {
         Log.d(TAG, "setView: called");
         setTitle(title);
         titleTV.setText(title);
@@ -169,6 +169,7 @@ public class DetailActivity
                 .placeholder(R.drawable.placeholder)
                 .into(posterIV);
     }
+
     private void setupVideosRecyclerView() {
         videosRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailActivity.this);
@@ -177,7 +178,7 @@ public class DetailActivity
         videosRecyclerView.setLayoutManager(layoutManager);
         videosRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-//    @Override
+
     public void setVideosAdapter(List<Video> videos) {
         Log.d(TAG, "setVideosAdapter: called");
         videosList = videos;
@@ -186,14 +187,16 @@ public class DetailActivity
             videosRecyclerView.setAdapter(videosAdapter);
         }
     }
+
     public void setReviewsAdapter(List<Review> reviews) {
         Log.d(TAG, "setReviewAdapter: called");
         reviewsList = reviews;
-        if(!reviewsList.isEmpty()) {
+        if (!reviewsList.isEmpty()) {
             ReviewsAdapter reviewsAdapter = new ReviewsAdapter(reviews);
             reviewsRecyclerView.setAdapter(reviewsAdapter);
         }
     }
+
     private void setupReviewsRecyclerView() {
         reviewsRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailActivity.this);
@@ -203,10 +206,10 @@ public class DetailActivity
     }
 
     private void setupFavoriteButton() {
-        if (IsFavorite()){
+        if (IsFavorite()) {
             favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
             favoriteBTN.setChecked(true);
-        }else {
+        } else {
             favoriteBTN.setChecked(false);
             favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
         }
@@ -219,15 +222,15 @@ public class DetailActivity
 
                 } else {
                     favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
-        deleteFromDataBase();
-    }
-    String[] projection = {MovieContract.MovieEntry.COLUMN_TITLE};
-                Log.d(TAG, "setupFavoriteButton: " + getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, projection, null, null,null,null));
-}
-        });
+                    deleteFromDataBase();
                 }
+                String[] projection = {MovieContract.MovieEntry.COLUMN_TITLE};
+                Log.d(TAG, "setupFavoriteButton: " + getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, projection, null, null, null, null));
+            }
+        });
+    }
 
-private void addToDataBase(){
+    private void addToDataBase() {
         ContentResolver contentResolver = getContentResolver();
         ContentValues values = new ContentValues();
         values.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
@@ -239,11 +242,11 @@ private void addToDataBase(){
         contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, values);
     }
 
-    private void deleteFromDataBase(){
+    private void deleteFromDataBase() {
         getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, selection, null);
     }
-    
-    private boolean IsFavorite(){
+
+    private boolean IsFavorite() {
         selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieID;
         Cursor cursor = getContentResolver().query(
                 MovieContract.MovieEntry.CONTENT_URI,
@@ -251,7 +254,7 @@ private void addToDataBase(){
                 selection,
                 null,
                 null
-                );
+        );
         Log.d(TAG, "IsFavorite: " + cursor);
         if (cursor.getCount() <= 0) {
             Log.d(TAG, "IsFavorite: tbs false");
@@ -278,16 +281,6 @@ private void addToDataBase(){
         Log.d(TAG, "onItemClick:  called");
         Video videoItem = videosList.get(position);
         Intent intent = YouTubeStandalonePlayer.createVideoIntent(this, getString(R.string.youtube_api_key), videoItem.getVideoEndpoint(), 0, true, false);
-startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                supportFinishAfterTransition();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        startActivity(intent);
     }
 }

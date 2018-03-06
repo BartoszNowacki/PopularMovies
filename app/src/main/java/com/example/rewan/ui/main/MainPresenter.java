@@ -121,9 +121,4 @@ public class MainPresenter
         intent.putExtra(Movie.MovieTags.ID, movie.getID());
         return intent;
     }
-
-    @Override
-    public String getTransitionName(int position){
-        return Movie.MovieTags.TRANSITION + position;
-    }
 }

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 
 
-public class Video extends BaseModel{
+public class Video {
     @SerializedName("name")
     @Expose
     private String videoTitle;
