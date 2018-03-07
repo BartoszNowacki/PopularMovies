@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 
 /**
- * Adapter for RecyclerView in Main Activity
+ * Adapter for RecyclerView in Main Activity. This Adapter is used for feed from network api
  */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>{
 
