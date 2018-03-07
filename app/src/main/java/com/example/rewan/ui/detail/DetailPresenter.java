@@ -48,7 +48,8 @@ class DetailPresenter
         this.API_KEY = API_KEY;
         LANG = Locale.getDefault().getLanguage();
     }
-
+    
+//region get methods
     public String getTitle(){
         return Movie.MovieTags.MOVIE_TITLE;
     }
@@ -75,6 +76,8 @@ class DetailPresenter
     String getID(){
         return Movie.MovieTags.ID;
     }
+    //end region
+    
     void setID(String id){
         this.id = id;
     }
@@ -87,6 +90,10 @@ class DetailPresenter
         makeCallWithType(reviewsCall, CallType.REVIEW);
     }
 
+      /**
+     * Call methods from retrofit interface. It can be used by diffrent types of calls
+     * @params Call<JsonObject> typeCall, CallType callType
+     */
     private void makeCallWithType (Call<JsonObject> typeCall, final CallType callType){
         typeCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -96,18 +103,15 @@ class DetailPresenter
                     if (isViewAttached()) {
                         switch(callType){
                             case VIDEO:
-                                Log.d(TAG, "onResponse: tbs video");
                                 videosResponse(moviesJsonArray);
                                 break;
                             case REVIEW:
-                                Log.d(TAG, "onResponse: tbs review");
                                 reviewsResponse(moviesJsonArray);
                                 break;
                         }
                     }
                 } else {
                     int httpCode = response.code();
-                    Log.d(TAG, "onResponse: error" + httpCode);
                     view.showErrorMessage(String.valueOf(httpCode));
                 }
             }
@@ -118,12 +122,21 @@ class DetailPresenter
             }
         });
     }
+    /**
+     * Convert response from network service and sets adapter. Used for videos data
+     * @params JsonArray videosJsonArray
+     */
     private void videosResponse(JsonArray videosJsonArray){
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Video>>() {
         }.getType();
         view.setVideosAdapter((List<Video>) gson.fromJson(videosJsonArray, listType));
     }
+    
+    /**
+     * Convert response from network service and sets adapter. Used for reviews data
+     * @params JsonArray reviewsJsonArray
+     */
     private void reviewsResponse(JsonArray reviewsJsonArray){
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Review>>() {
@@ -138,6 +151,10 @@ class DetailPresenter
         return networkHelper;
     }
 
+      /**
+     * Convert string vote to float and its is divided by 2. This number is converted for RatingBar reason 
+     * @params String vote
+     */
     public float convertToFloat(String vote){
         return Float.parseFloat(vote)/2;
     }
