@@ -42,44 +42,17 @@ public class MovieProvider extends ContentProvider {
 
         @Override
         public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
-
-            final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-
-            switch (sUriMatcher.match(uri)) {
-                case CODE_MOVIE:
-                    db.beginTransaction();
-                    int rowsInserted = 0;
-                    try {
-                        for(ContentValues value: values) {
-                            long _id = db.insert(MovieEntry.TABLE_NAME, null, value);
-                            if(_id!=-1) {
-                                rowsInserted++;
-                            }
-                        }
-                        db.setTransactionSuccessful();
-                    } finally {
-                        db.endTransaction();
-                    }
-                    if(rowsInserted > 0) {
-                        getContext().getContentResolver().notifyChange(uri, null);
-                    }
-                    return rowsInserted;
-                default:
-                    return super.bulkInsert(uri, values);
-            }
+                // don't need that method
         }
 
         @Nullable
         @Override
         public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-
             final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-
             Cursor cursor;
-
+                
             switch (sUriMatcher.match(uri)) {
                 case CODE_MOVIE: {
-
                     cursor = db.query(MovieEntry.TABLE_NAME,
                             projection,
                             selection,
@@ -89,39 +62,19 @@ public class MovieProvider extends ContentProvider {
                             sortOrder);
                     break;
                 }
-
-                case CODE_MOVIE_WITH_ID: {
-                    String id = uri.getLastPathSegment();
-                    String[] selectionArguments = new String[] {id};
-
-                    cursor = db.query(MovieEntry.TABLE_NAME,
-                            projection,
-                            MovieEntry._ID+ " = ?",
-                            selectionArguments,
-                            null,
-                            null,
-                            sortOrder);
-
-                    break;
-                }
                 default:
                     throw new UnsupportedOperationException("Unknown uri: " + uri);
-
             }
-
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
             return cursor;
         }
 
         @Override
         public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-
             final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-
             int numRowsDeleted;
 
             if( null == selection) selection = "1";
-
             switch (sUriMatcher.match(uri)) {
                 case CODE_MOVIE: {
                     numRowsDeleted = db.delete(MovieEntry.TABLE_NAME,
@@ -131,16 +84,12 @@ public class MovieProvider extends ContentProvider {
                 }
                 default:
                     throw new UnsupportedOperationException("Unknown uri: " + uri);
-
             }
-
             if(numRowsDeleted != 0) {
                 getContext().getContentResolver().notifyChange(uri, null);
             }
-
             return numRowsDeleted;
         }
-
 
     @Nullable
     @Override
