@@ -193,9 +193,6 @@ public class MainActivity
     @Override
     public void onClick(int movieId, View thumbnail, int position) {
         Intent intent = new Intent(this, DetailActivity.class);
-//        Pair<View, String> p1 = Pair.create(thumbnail, getString(R.string.thumbnail_transition_name));
-//        ActivityOptionsCompat options = ActivityOptionsCompat.
-//                makeSceneTransitionAnimation(this, p1);
         startActivity(mainPresenter.configuredIntent(intent, moviesList.get(position), position));
     }
 
@@ -223,9 +220,6 @@ public class MainActivity
             favoriteAdapter.swapCursor(data);
             if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
             recyclerView.smoothScrollToPosition(mPosition);
-            int count = favoriteAdapter.getItemCount();
-
-            Log.d("tbs", "onLoadFinished: count is " + count);
         }
     }
 
@@ -233,7 +227,11 @@ public class MainActivity
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         favoriteAdapter.swapCursor(null);
     }
-
+    
+    /**
+     * Method to check if screen is in Landscape mode
+     * @return boolean isLandscapeMode
+     */
     public boolean isLandscapeMode(){
         int configuration = getResources().getConfiguration().orientation;
         return configuration == Configuration.ORIENTATION_LANDSCAPE;
@@ -253,6 +251,11 @@ public class MainActivity
         intent.putExtra(Movie.MovieTags.ID, cursor.getString(INDEX_MOVIE_ID));
         startActivity(intent);
     }
+    /**
+     * Method to check if screen is in Landscape mode
+     * @params movieID
+     * @return Cursor movieDataEntry
+     */
     private Cursor makeSingleMovieQuery (String movieID){
         String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieID;
         return  getContentResolver().query(
