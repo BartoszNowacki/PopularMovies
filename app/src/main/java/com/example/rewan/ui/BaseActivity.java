@@ -25,4 +25,9 @@ public class BaseActivity extends AppCompatActivity {
     public static final int INDEX_MOVIE_VOTE = 5;
     public static final int INDEX_MOVIE_PLOT = 6;
     public static final int INDEX_MOVIE_ID = 7;
+    
+    public boolean isLandscapeMode(){
+        int configuration = getResources().getConfiguration().orientation;
+        return configuration == Configuration.ORIENTATION_LANDSCAPE;
+}
 }
