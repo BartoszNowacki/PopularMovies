@@ -232,10 +232,11 @@ public class DetailActivity
                 if (isChecked) {
                     favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
                     addToDataBase();
-
+                    showMessage(R.string.database_add);
                 } else {
                     favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
                     deleteFromDataBase();
+                    showMessage(R.string.database_remove);
                 }
                 String[] projection = {MovieContract.MovieEntry.COLUMN_TITLE};
                 Log.d(TAG, "setupFavoriteButton: " + getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, projection, null, null, null, null));
@@ -281,7 +282,14 @@ public class DetailActivity
 
     @Override
     public void showMessage(int messageId) {
-
+        switch (messageId) {
+            case R.string.database_remove:
+                Snackbar.make(constraintLayout, R.string.network_disabled, Snackbar.LENGTH_LONG).show();
+                break;
+            case R.string.database_add:
+                Snackbar.make(constraintLayout, R.string.network_disabled, Snackbar.LENGTH_LONG).show();
+                break;
+        }
     }
 
     @Override
