@@ -45,8 +45,8 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <ToggleButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/star_size"
+                android:layout_height="@dimen/star_size"
                 android:id="@+id/favorite_button"
                 android:textOn=""
                 android:textOff=""
