@@ -152,14 +152,17 @@ public class DetailActivity
         movieID = (String) savedInstanceState.getSerializable(detailPresenter.getID());
         posterIV.setTransitionName((String) savedInstanceState.getSerializable(detailPresenter.getID()));
     }
-
+     /**
+     * Setup for retrofit instance
+     */
     public void setupRetrofit() {
         Retrofit retrofit = ((RetrofitHelper) getApplication()).getRetrofitInstance();
         dataService = retrofit.create(DataService.class);
     }
-
+     /**
+     * Sets view components
+     */
     public void setView() {
-        Log.d(TAG, "setView: called");
         setTitle(title);
         titleTV.setText(title);
         releaseTV.setText(detailPresenter.getReleaseYear(release));
@@ -172,7 +175,9 @@ public class DetailActivity
                 .placeholder(R.drawable.placeholder)
                 .into(posterIV);
     }
-    
+    /**
+     * Method returns proper image path for Landscape or Portrait mode
+     */
     public String createImagePath(){
         String imagePath;
         if (isLandscapeMode()){
@@ -182,7 +187,9 @@ public class DetailActivity
         return imagePath;
         }
     }
-
+     /**
+     * Sets RecyclerView for videos
+     */
     private void setupVideosRecyclerView() {
         videosRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailActivity.this);
@@ -191,25 +198,29 @@ public class DetailActivity
         videosRecyclerView.setLayoutManager(layoutManager);
         videosRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-
+     /**
+     * Sets adapter for videos
+     */
     public void setVideosAdapter(List<Video> videos) {
-        Log.d(TAG, "setVideosAdapter: called");
         videosList = videos;
         if (!videosList.isEmpty()) {
             VideosAdapter videosAdapter = new VideosAdapter(videos, this);
             videosRecyclerView.setAdapter(videosAdapter);
         }
     }
-
+     /**
+     * Sets adapter for reviews
+     */
     public void setReviewsAdapter(List<Review> reviews) {
-        Log.d(TAG, "setReviewAdapter: called");
         reviewsList = reviews;
         if (!reviewsList.isEmpty()) {
             ReviewsAdapter reviewsAdapter = new ReviewsAdapter(reviews);
             reviewsRecyclerView.setAdapter(reviewsAdapter);
         }
     }
-
+     /**
+     * Sets RecyclerView for videos
+     */
     private void setupReviewsRecyclerView() {
         reviewsRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailActivity.this);
@@ -217,7 +228,9 @@ public class DetailActivity
         reviewsRecyclerView.setLayoutManager(layoutManager);
         reviewsRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-
+     /**
+     * Setup for favorite button
+     */
     private void setupFavoriteButton() {
         if (IsFavorite()) {
             favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
@@ -230,20 +243,37 @@ public class DetailActivity
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
-                    addToDataBase();
-                    showMessage(R.string.database_add);
+                  favoriteButtonActive();
                 } else {
-                    favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
-                    deleteFromDataBase();
-                    showMessage(R.string.database_remove);
+                  favoriteButtonInactive();
                 }
                 String[] projection = {MovieContract.MovieEntry.COLUMN_TITLE};
                 Log.d(TAG, "setupFavoriteButton: " + getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, projection, null, null, null, null));
             }
         });
     }
-
+    
+    /**
+     * Method for making favorite Button Active
+     */
+    private void favoriteButtonActive(){
+        favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_on));
+        addToDataBase();
+        showMessage(R.string.database_add);
+    }
+    
+    /**
+     * Method for making favorite Button Inactive
+     */
+    private void favoriteButtonInactive(){
+        favoriteBTN.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.btn_star_big_off));
+        deleteFromDataBase();
+        showMessage(R.string.database_remove);
+    }
+    
+    /**
+     * Method for adding movie data to sqlite database via content resolver
+     */
     private void addToDataBase() {
         ContentResolver contentResolver = getContentResolver();
         ContentValues values = new ContentValues();
@@ -256,10 +286,16 @@ public class DetailActivity
         contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, values);
     }
 
+     /**
+     * Method for removing movie data from sqlite database via content resolver
+     */
     private void deleteFromDataBase() {
         getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, selection, null);
     }
 
+     /**
+     * Method which check if movie is in database
+     */
     private boolean IsFavorite() {
         selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieID;
         Cursor cursor = getContentResolver().query(
@@ -269,13 +305,11 @@ public class DetailActivity
                 null,
                 null
         );
-        Log.d(TAG, "IsFavorite: " + cursor);
         if (cursor.getCount() <= 0) {
             Log.d(TAG, "IsFavorite: tbs false");
             cursor.close();
             return false;
         }
-        Log.d(TAG, "IsFavorite: tbs true");
         cursor.close();
         return true;
     }
