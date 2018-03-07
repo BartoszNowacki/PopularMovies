@@ -10,8 +10,9 @@ import com.example.rewan.network.NetworkHelper;
 
 import java.util.List;
 
-
-
+    /**
+     * Contract for Main. Part of MVP pattern
+     */
 public interface MainContract {
 
     interface View extends MvpView {
