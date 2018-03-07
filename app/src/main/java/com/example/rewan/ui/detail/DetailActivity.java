@@ -78,6 +78,7 @@ public class DetailActivity
 
     String title;
     String posterEndpoint;
+    String backdropEndpoint;
     String release;
     String vote;
     String plot;
@@ -136,6 +137,7 @@ public class DetailActivity
             vote = extras.getString(detailPresenter.getVote());
             plot = extras.getString(detailPresenter.getPlot());
             posterEndpoint = extras.getString(detailPresenter.getPoster());
+            backdropEndpoint = extras.getString(detailPresenter.getBackdrop());
             movieID = extras.getString(detailPresenter.getID());
         }
     }
@@ -146,6 +148,7 @@ public class DetailActivity
         vote = (String) savedInstanceState.getSerializable(detailPresenter.getVote());
         plot = (String) savedInstanceState.getSerializable(detailPresenter.getPlot());
         posterEndpoint = (String) savedInstanceState.getSerializable(detailPresenter.getPoster());
+        backdropEndpoint = (String) savedInstanceState.getSerializable(detailPresenter.getBackdrop());
         movieID = (String) savedInstanceState.getSerializable(detailPresenter.getID());
         posterIV.setTransitionName((String) savedInstanceState.getSerializable(detailPresenter.getID()));
     }
