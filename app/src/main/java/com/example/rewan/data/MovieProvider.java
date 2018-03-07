@@ -12,7 +12,9 @@ import android.support.annotation.Nullable;
 
 import com.example.rewan.data.MovieContract.MovieEntry;
 
-
+/**
+ * Content provider for Movie database.
+ */
 public class MovieProvider extends ContentProvider {
 
         public static final int CODE_MOVIE = 100;
