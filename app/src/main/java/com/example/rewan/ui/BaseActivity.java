@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.rewan.data.MovieContract;
 
-
+/**
+     * Base class for activities
+     */
 public class BaseActivity extends AppCompatActivity {
 
     public static final String[] MOVIE_LIST_PROJECTION = {
