@@ -54,7 +54,7 @@ public class MainPresenter
             view.showMessage(R.string.network_disabled);
         }
     }
-
+    
     @Override
     public void makeCall() {
         Call<JsonObject> moviesCall = getSortOrder();
@@ -71,7 +71,6 @@ public class MainPresenter
                     view.showErrorMessage(String.valueOf(httpCode));
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 view.showErrorMessage(t.getMessage());
@@ -93,7 +92,11 @@ public class MainPresenter
     void setTopCategory(boolean isTopCategory) {
         this.isTopCategory = isTopCategory;
     }
-
+     /**
+     * Converts response from network service to List<Movie>
+     * @param JsonObject restResponse
+     * @return List<Movie> moviesList
+     */
     private List<Movie> convertResponse(JsonObject restResponse) {
         JsonArray moviesJsonArray = restResponse.getAsJsonArray("results");
         Gson gson = new Gson();
@@ -111,6 +114,11 @@ public class MainPresenter
         return networkHelper;
     }
 
+     /**
+     * Configures intent and adds data with putExtra method.
+     * @param Intent intent, Movie movie, int position
+     * @return Intent intent
+     */
     @Override
     public Intent configuredIntent(Intent intent, Movie movie, int position) {
         intent.putExtra(Movie.MovieTags.MOVIE_TITLE, movie.getTitle());
