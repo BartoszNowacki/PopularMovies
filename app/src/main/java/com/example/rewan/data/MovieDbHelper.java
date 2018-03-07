@@ -34,6 +34,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                         MovieEntry.COLUMN_TITLE       + " TEXT NOT NULL, "                 +
                         MovieEntry.COLUMN_RELEASE     + " TEXT NOT NULL,"                  +
                         MovieEntry.COLUMN_POSTER      + " TEXT NOT NULL, "                 +
+                        MovieEntry.COLUMN_BACKDROP    + " TEXT NOT NULL, "                 +
                         MovieEntry.COLUMN_VOTE        + " TEXT NOT NULL,"                  +
                         MovieEntry.COLUMN_PLOT        + " TEXT NOT NULL,"                  +
                         MovieEntry.COLUMN_MOVIE_ID    + " TEXT NOT NULL,"                  +
