@@ -64,6 +64,9 @@ class DetailPresenter
     public String getPoster(){
         return Movie.MovieTags.MOVIE_POSTER;
     }
+    String getBackdrop(){
+        return Movie.MovieTags.MOVIE_BACKDROP;
+    }
     public String getPlot(){
         return Movie.MovieTags.MOVIE_PLOT;
     }
@@ -92,7 +95,8 @@ class DetailPresenter
 
       /**
      * Call methods from retrofit interface. It can be used by diffrent types of calls
-     * @params Call<JsonObject> typeCall, CallType callType
+     * @param typeCall
+     * @param callType
      */
     private void makeCallWithType (Call<JsonObject> typeCall, final CallType callType){
         typeCall.enqueue(new Callback<JsonObject>() {
@@ -124,7 +128,7 @@ class DetailPresenter
     }
     /**
      * Convert response from network service and sets adapter. Used for videos data
-     * @params JsonArray videosJsonArray
+     * @param videosJsonArray
      */
     private void videosResponse(JsonArray videosJsonArray){
         Gson gson = new Gson();
@@ -135,7 +139,7 @@ class DetailPresenter
     
     /**
      * Convert response from network service and sets adapter. Used for reviews data
-     * @params JsonArray reviewsJsonArray
+     * @param reviewsJsonArray
      */
     private void reviewsResponse(JsonArray reviewsJsonArray){
         Gson gson = new Gson();
@@ -153,7 +157,7 @@ class DetailPresenter
 
       /**
      * Convert string vote to float and its is divided by 2. This number is converted for RatingBar reason 
-     * @params String vote
+     * @param vote
      */
     public float convertToFloat(String vote){
         return Float.parseFloat(vote)/2;

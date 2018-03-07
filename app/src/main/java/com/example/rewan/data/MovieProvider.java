@@ -44,7 +44,7 @@ public class MovieProvider extends ContentProvider {
 
         @Override
         public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
-                // don't need that method
+               return 0;
         }
 
         @Nullable
@@ -95,7 +95,7 @@ public class MovieProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
         final SQLiteDatabase db;
         Uri returnUri;

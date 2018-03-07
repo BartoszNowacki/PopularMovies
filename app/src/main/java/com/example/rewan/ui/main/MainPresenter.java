@@ -87,15 +87,15 @@ public class MainPresenter
     }
     /**
      * Sets variable isTopCategory
-     * @param isTopCategory boolean to set category
+     * @param isTopCategory
      */
     void setTopCategory(boolean isTopCategory) {
         this.isTopCategory = isTopCategory;
     }
      /**
      * Converts response from network service to List<Movie>
-     * @param JsonObject restResponse
-     * @return List<Movie> moviesList
+     * @param restResponse
+     * @return List<Movie>
      */
     private List<Movie> convertResponse(JsonObject restResponse) {
         JsonArray moviesJsonArray = restResponse.getAsJsonArray("results");
@@ -116,8 +116,10 @@ public class MainPresenter
 
      /**
      * Configures intent and adds data with putExtra method.
-     * @param Intent intent, Movie movie, int position
-     * @return Intent intent
+     * @param intent
+      * @param movie
+      * @param position
+      * @return Intent
      */
     @Override
     public Intent configuredIntent(Intent intent, Movie movie, int position) {

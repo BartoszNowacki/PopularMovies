@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -65,6 +66,8 @@ public class DetailActivity
     RecyclerView videosRecyclerView;
     @BindView(R.id.content_layout)
     ConstraintLayout contentLayout;
+    @BindView(R.id.constraint_layout)
+    ConstraintLayout constraintLayout;
     @BindView(R.id.reviews_recycler_view)
     RecyclerView reviewsRecyclerView;
     @BindView(R.id.rating)
@@ -112,6 +115,7 @@ public class DetailActivity
         }
         setupFavoriteButton();
         detailPresenter.setID(movieID);
+        Log.d(TAG, "onCreate: tbs  " + backdropEndpoint);
         setView();
     }
 
@@ -196,8 +200,8 @@ public class DetailActivity
                 imagePath = detailPresenter.getPosterPath(backdropEndpoint);
         } else {
                 imagePath = detailPresenter.getPosterPath(posterEndpoint);
-        return imagePath;
         }
+        return imagePath;
     }
      /**
      * Sets RecyclerView for videos
@@ -292,6 +296,7 @@ public class DetailActivity
         values.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
         values.put(MovieContract.MovieEntry.COLUMN_RELEASE, release);
         values.put(MovieContract.MovieEntry.COLUMN_POSTER, posterEndpoint);
+        values.put(MovieContract.MovieEntry.COLUMN_BACKDROP, backdropEndpoint);
         values.put(MovieContract.MovieEntry.COLUMN_VOTE, vote);
         values.put(MovieContract.MovieEntry.COLUMN_PLOT, plot);
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieID);
@@ -330,10 +335,10 @@ public class DetailActivity
     public void showMessage(int messageId) {
         switch (messageId) {
             case R.string.database_remove:
-                Snackbar.make(constraintLayout, R.string.network_disabled, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(constraintLayout, R.string.database_remove, Snackbar.LENGTH_LONG).show();
                 break;
             case R.string.database_add:
-                Snackbar.make(constraintLayout, R.string.network_disabled, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(constraintLayout, R.string.database_add, Snackbar.LENGTH_LONG).show();
                 break;
         }
     }

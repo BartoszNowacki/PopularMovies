@@ -1,7 +1,6 @@
 package com.example.rewan.ui.main;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -58,8 +57,10 @@ public class MainActivity
     MainPresenter mainPresenter;
     private FavoriteMovieAdapter favoriteAdapter;
     private int mPosition = RecyclerView.NO_POSITION;
+    private int sortOrderID;
 
 
+    public static final String SORT_TYPE = "sort type";
     private static final int ID_MOVIE_LOADER = 1;
 
     @Override
@@ -71,13 +72,21 @@ public class MainActivity
 
         setupRecyclerView();
         setupRetrofit();
+        sortOrderID = 0;
         favoriteAdapter = new FavoriteMovieAdapter(this, this);
         String apiKey = getString(R.string.movie_api_key);
         mainPresenter = new MainPresenter(dataService, apiKey);
         mainPresenter.attachView(this);
-        mainPresenter.getMovies(this);
 
         getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            sortOrderID = savedInstanceState.getInt(SORT_TYPE, 0);
+        }
     }
 
     @Override
@@ -93,6 +102,12 @@ public class MainActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        state.putInt(SORT_TYPE, sortSpinner.getSelectedItemPosition());
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.main, menu);
@@ -104,30 +119,44 @@ public class MainActivity
      * Configure spinner for Sort order
      */
     private void configureSortSpinner() {
+        Log.d("tbs", "configureSortSpinner:  called");
         final MenuItem item = menu.findItem(R.id.sort);
-        final String favorite = getString(R.string.favorite);
         sortSpinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this, R.array.sort_criteria_array, android.R.layout.simple_spinner_item);
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortSpinner.setAdapter(sortAdapter);
+        sortSpinner.setSelection(sortOrderID);
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = sortSpinner.getSelectedItem().toString();
-                if (favorite.equals(selectedItem)){
-                    recyclerView.setAdapter(favoriteAdapter);
-                } else {
-                    checkSortOrder(selectedItem);
-                    mainPresenter.getMovies(MainActivity.this);
-                }
+                sortOrderID = sortSpinner.getSelectedItemPosition();
+                makeDemand();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
 
+    }
+
+    private void makeDemand(){
+        final int popularID = 0;
+        final int topID = 1;
+        final int favoriteID = 2;
+        switch (sortOrderID) {
+            case popularID:
+                checkSortOrder(getString(R.string.popular));
+                mainPresenter.getMovies(MainActivity.this);
+                break;
+            case topID:
+                checkSortOrder(getString(R.string.top_rated));
+                mainPresenter.getMovies(MainActivity.this);
+                break;
+            case favoriteID:
+                recyclerView.setAdapter(favoriteAdapter);
+                break;
+        }
     }
 
     /**
@@ -227,15 +256,6 @@ public class MainActivity
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         favoriteAdapter.swapCursor(null);
     }
-    
-    /**
-     * Method to check if screen is in Landscape mode
-     * @return boolean isLandscapeMode
-     */
-    public boolean isLandscapeMode(){
-        int configuration = getResources().getConfiguration().orientation;
-        return configuration == Configuration.ORIENTATION_LANDSCAPE;
-    }
 
     @Override
     public void onFavoriteClick(String movieId, View thumbnail, int position) {
@@ -247,14 +267,15 @@ public class MainActivity
         intent.putExtra(Movie.MovieTags.MOVIE_PLOT, cursor.getString(INDEX_MOVIE_PLOT));
         intent.putExtra(Movie.MovieTags.MOVIE_POSTER, cursor.getString(INDEX_MOVIE_POSTER));
         intent.putExtra(Movie.MovieTags.MOVIE_BACKDROP, cursor.getString(INDEX_MOVIE_BACKDROP));
+        Log.d("tbs", "onFavoriteClick: " +cursor.getString(INDEX_MOVIE_BACKDROP));
         intent.putExtra(Movie.MovieTags.MOVIE_VOTE, cursor.getString(INDEX_MOVIE_VOTE));
         intent.putExtra(Movie.MovieTags.ID, cursor.getString(INDEX_MOVIE_ID));
         startActivity(intent);
     }
     /**
      * Method to check if screen is in Landscape mode
-     * @params movieID
-     * @return Cursor movieDataEntry
+     * @param movieID
+     * @return Cursor
      */
     private Cursor makeSingleMovieQuery (String movieID){
         String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieID;
