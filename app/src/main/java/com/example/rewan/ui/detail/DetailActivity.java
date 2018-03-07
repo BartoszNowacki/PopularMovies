@@ -167,10 +167,20 @@ public class DetailActivity
         ratingBar.setRating(detailPresenter.convertToFloat(vote));
         plotTV.setText(plot);
         Picasso.with(this)
-                .load(detailPresenter.getPosterPath(posterEndpoint))
+                .load(createImagePath())
                 .error(R.drawable.placeholder)
                 .placeholder(R.drawable.placeholder)
                 .into(posterIV);
+    }
+    
+    public String createImagePath(){
+        String imagePath;
+        if (isLandscapeMode()){
+                imagePath = detailPresenter.getPosterPath(backdropEndpoint);
+        } else {
+                imagePath = detailPresenter.getPosterPath(posterEndpoint);
+        return imagePath;
+        }
     }
 
     private void setupVideosRecyclerView() {
