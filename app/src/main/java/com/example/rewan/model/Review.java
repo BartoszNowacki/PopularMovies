@@ -3,7 +3,9 @@ package com.example.rewan.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
+/**
+ * Model for Movie reviews feed
+ */
 
 public class Review {
     @SerializedName("author")
