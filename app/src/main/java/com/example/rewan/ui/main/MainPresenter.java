@@ -117,6 +117,7 @@ public class MainPresenter
         intent.putExtra(Movie.MovieTags.MOVIE_RELEASE, movie.getReleaseDate());
         intent.putExtra(Movie.MovieTags.MOVIE_PLOT, movie.getPlotSynopsis());
         intent.putExtra(Movie.MovieTags.MOVIE_POSTER, movie.getMoviePoster());
+        intent.putExtra(Movie.MovieTags.MOVIE_BACKDROP, movie.getMovieBackdrop());
         intent.putExtra(Movie.MovieTags.MOVIE_VOTE, movie.getVoteAverage());
         intent.putExtra(Movie.MovieTags.ID, movie.getID());
         return intent;
