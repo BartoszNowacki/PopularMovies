@@ -1,8 +1,5 @@
 package com.example.rewan.base;
 
-/**
- * Created by Maciej Bialorucki on 12.12.17.
- */
 
 /**
  * Base interface for all presenters in app
