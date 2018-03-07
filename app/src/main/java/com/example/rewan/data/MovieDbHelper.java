@@ -13,14 +13,11 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
 
     private static final String DATABASE_NAME = "movie.db";
-
-
     private static final int DATABASE_VERSION = 1;
 
     MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -28,8 +25,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_MOVIE_TABLE =
 
                 "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
-
-
                         MovieEntry._ID                + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         MovieEntry.COLUMN_TITLE       + " TEXT NOT NULL, "                 +
                         MovieEntry.COLUMN_RELEASE     + " TEXT NOT NULL,"                  +
@@ -39,7 +34,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                         MovieEntry.COLUMN_PLOT        + " TEXT NOT NULL,"                  +
                         MovieEntry.COLUMN_MOVIE_ID    + " TEXT NOT NULL,"                  +
                         " UNIQUE (" + MovieEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
-
 
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
     }
