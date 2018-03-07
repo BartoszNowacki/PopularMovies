@@ -8,6 +8,9 @@ import com.example.rewan.model.Video;
 
 import java.util.List;
 
+    /**
+     * Contract for Detail. Part of MVP pattern
+     */
 public interface DetailContract {
     interface View extends MvpView {
         void setView();
