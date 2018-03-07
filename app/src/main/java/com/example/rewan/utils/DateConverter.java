@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
+    /**
+     * Class for converting date style
+     */
 public class DateConverter {
     public String convertDate(String time) {
         Date date = null;
