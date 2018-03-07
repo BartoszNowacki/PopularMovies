@@ -25,7 +25,10 @@ public class NetworkHelper extends BroadcastReceiver {
         mNetworkIntentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         this.networkStateDataListener = dataListner;
     }
-
+       /**
+     * Method to get IntentFilter used for connectivity action
+     * @return IntentFilter
+     */
     public IntentFilter getIntentFilter(){
         return mNetworkIntentFilter;
     }
