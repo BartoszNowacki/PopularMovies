@@ -17,6 +17,9 @@ public class Movie {
         @SerializedName("poster_path")
         @Expose
         private String moviePoster;
+         @SerializedName("backdrop_path")
+        @Expose
+        private String movieBackdrop;
         @SerializedName("vote_average")
         @Expose
         private String voteAverage;
@@ -36,6 +39,9 @@ public class Movie {
         public String getMoviePoster() {
             return moviePoster;
         }
+        public String getMovieBackdrop() {
+            return movieBackdrop;
+        }
         public String getVoteAverage() {
                 return voteAverage;
         }
@@ -53,6 +59,7 @@ public class Movie {
                     "title='" + title + '\'' +
                     ", releaseDate='" + releaseDate + '\'' +
                     ", moviePoster='" + moviePoster + '\'' +
+                    ", movieBackdrop='" + movieBackdrop + '\'' +
                     ", voteAverage='" + voteAverage + '\'' +
                     ", plotSynopsis='" + moviePoster + '\'' +
                     ", ID='" + id + '\'' +
@@ -62,6 +69,7 @@ public class Movie {
                 public final static String MOVIE_TITLE = "title";
                 public final static String MOVIE_RELEASE = "release";
                 public final static String MOVIE_POSTER = "poster";
+                public final static String MOVIE_BACKDROP = "backdrop";
                 public final static String MOVIE_VOTE = "vote";
                 public final static String MOVIE_PLOT = "plot";
                 public final static String ID = "id";
