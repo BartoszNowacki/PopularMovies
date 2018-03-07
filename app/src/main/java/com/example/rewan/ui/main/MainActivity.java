@@ -248,6 +248,7 @@ public class MainActivity
         intent.putExtra(Movie.MovieTags.MOVIE_RELEASE, cursor.getString(INDEX_MOVIE_RELEASE));
         intent.putExtra(Movie.MovieTags.MOVIE_PLOT, cursor.getString(INDEX_MOVIE_PLOT));
         intent.putExtra(Movie.MovieTags.MOVIE_POSTER, cursor.getString(INDEX_MOVIE_POSTER));
+        intent.putExtra(Movie.MovieTags.MOVIE_BACKDROP, cursor.getString(INDEX_MOVIE_BACKDROP));
         intent.putExtra(Movie.MovieTags.MOVIE_VOTE, cursor.getString(INDEX_MOVIE_VOTE));
         intent.putExtra(Movie.MovieTags.ID, cursor.getString(INDEX_MOVIE_ID));
         startActivity(intent);
