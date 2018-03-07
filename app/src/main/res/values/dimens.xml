@@ -14,4 +14,6 @@
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_xsmall">10sp</dimen>
 
+    
+    <dimen name="star_size">50dp</dimen>
 </resources>
