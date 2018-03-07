@@ -17,7 +17,9 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+/**
+     * Adapter for Movies from DataBase
+     */
 public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdapter.MovieViewHolder> {
 
     private final Context mContext;
@@ -29,7 +31,6 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
     }
 
     public FavoriteMovieAdapter(Context context, MovieAdapterOnClickHandler clickHandler) {
-        Log.d("tbs", "FavoriteMovieAdapter: ");
         this.mContext = context;
         this.mClickHandler = clickHandler;
     }
@@ -79,7 +80,6 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
             int position = getAdapterPosition();
             mCursor.moveToPosition(position);
             String movieId = mCursor.getString(MainActivity.INDEX_MOVIE_ID);
-            Log.d("tbs", "onClick: " + movieId);
             mClickHandler.onFavoriteClick(movieId, thumbnailIV, position);
         }
     }
