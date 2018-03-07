@@ -126,6 +126,18 @@ public class DetailActivity
         super.onPause();
         unregisterReceiver(detailPresenter.getReceiver());
     }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        state.putSerializable(detailPresenter.getTitle(), title);
+        state.putSerializable(detailPresenter.getRelease(), release);
+        state.putSerializable(detailPresenter.getVote(), vote);
+        state.putSerializable(detailPresenter.getPlot(), plot);
+        state.putSerializable(detailPresenter.getPoster(), posterEndpoint);
+        state.putSerializable(detailPresenter.getBackdrop(), backdropEndpoint);
+        state.putSerializable(detailPresenter.getID(), movieID);
+}
 
     void getFromExtras() {
         Bundle extras = getIntent().getExtras();
