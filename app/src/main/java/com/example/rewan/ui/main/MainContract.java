@@ -17,6 +17,7 @@ public interface MainContract {
 
     interface View extends MvpView {
         void setMoviesAdapter(List<Movie> countries);
+        void goToScrollPosition();
     }
 
     interface Presenter<V extends MvpView> extends MvpPresenter<V> {
@@ -24,5 +25,6 @@ public interface MainContract {
         NetworkHelper getReceiver();
         IntentFilter getIntentFilter();
         void getMovies(Context context);
+        void makeFavorite(boolean isFavorite);
     }
 }

@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 
 import com.example.rewan.R;
 import com.example.rewan.base.BasePresenter;
@@ -38,12 +39,14 @@ public class MainPresenter
     private DataService dataService;
     private boolean isTopCategory = false;
     private String LANG;
+    private boolean isFavorite;
 
     MainPresenter(DataService dataService, String API_KEY) {
         networkHelper = new NetworkHelper(this);
         this.dataService = dataService;
         this.API_KEY = API_KEY;
         LANG = Locale.getDefault().getLanguage();
+        isFavorite = false;
     }
 
     @Override
@@ -54,28 +57,32 @@ public class MainPresenter
             view.showMessage(R.string.network_disabled);
         }
     }
-    
-    @Override
-    public void makeCall() {
-        Call<JsonObject> moviesCall = getSortOrder();
-        moviesCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    List<Movie> moviesList = convertResponse(response.body());
-                    if (isViewAttached()) {
-                        view.setMoviesAdapter(moviesList);
+
+
+    void makeCall() {
+        if (!isFavorite) {
+            Call<JsonObject> moviesCall = getSortOrder();
+            moviesCall.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        List<Movie> moviesList = convertResponse(response.body());
+                        if (isViewAttached()) {
+                            view.setMoviesAdapter(moviesList);
+                            view.goToScrollPosition();
+                        }
+                    } else {
+                        int httpCode = response.code();
+                        view.showErrorMessage(String.valueOf(httpCode));
                     }
-                } else {
-                    int httpCode = response.code();
-                    view.showErrorMessage(String.valueOf(httpCode));
                 }
-            }
-            @Override
-            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                view.showErrorMessage(t.getMessage());
-            }
-        });
+
+                @Override
+                public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                    view.showErrorMessage(t.getMessage());
+                }
+            });
+        }
     }
 
     private Call<JsonObject> getSortOrder() {
@@ -131,5 +138,15 @@ public class MainPresenter
         intent.putExtra(Movie.MovieTags.MOVIE_VOTE, movie.getVoteAverage());
         intent.putExtra(Movie.MovieTags.ID, movie.getID());
         return intent;
+    }
+
+    @Override
+    public void makeFavorite(boolean isFavorite){
+        this.isFavorite = isFavorite;
+    }
+
+    @Override
+    public void sendNetworkAvailableMessage() {
+        view.showMessage(R.string.network_available);
     }
 }

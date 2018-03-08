@@ -61,7 +61,7 @@ public class NetworkHelper extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (isNetworkAvailable(context)) {
-                networkStateDataListener.makeCall();
+                networkStateDataListener.sendNetworkAvailableMessage();
         }
     }
 }

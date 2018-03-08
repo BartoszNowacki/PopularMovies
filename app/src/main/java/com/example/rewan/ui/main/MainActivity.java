@@ -55,9 +55,14 @@ public class MainActivity
     List<Movie> moviesList;
     private DataService dataService;
     MainPresenter mainPresenter;
+    GridLayoutManager layoutManager;
     private FavoriteMovieAdapter favoriteAdapter;
+
     private int mPosition = RecyclerView.NO_POSITION;
     private int sortOrderID;
+    int currentVisiblePosition;
+    private boolean initialized;
+
 
 
     public static final String SORT_TYPE = "sort type";
@@ -72,7 +77,11 @@ public class MainActivity
 
         setupRecyclerView();
         setupRetrofit();
+
+        initialized=false;
         sortOrderID = 0;
+        currentVisiblePosition = 0;
+
         favoriteAdapter = new FavoriteMovieAdapter(this, this);
         String apiKey = getString(R.string.movie_api_key);
         mainPresenter = new MainPresenter(dataService, apiKey);
@@ -86,6 +95,7 @@ public class MainActivity
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             sortOrderID = savedInstanceState.getInt(SORT_TYPE, 0);
+            currentVisiblePosition = savedInstanceState.getInt(POSITION, 0);
         }
     }
 
@@ -99,12 +109,14 @@ public class MainActivity
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mainPresenter.getReceiver());
+        currentVisiblePosition = ((GridLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         state.putInt(SORT_TYPE, sortSpinner.getSelectedItemPosition());
+        state.putInt(POSITION, currentVisiblePosition);
     }
 
     @Override
@@ -119,7 +131,6 @@ public class MainActivity
      * Configure spinner for Sort order
      */
     private void configureSortSpinner() {
-        Log.d("tbs", "configureSortSpinner:  called");
         final MenuItem item = menu.findItem(R.id.sort);
         sortSpinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this, R.array.sort_criteria_array, android.R.layout.simple_spinner_item);
@@ -146,17 +157,26 @@ public class MainActivity
         final int favoriteID = 2;
         switch (sortOrderID) {
             case popularID:
+                mainPresenter.makeFavorite(false);
                 checkSortOrder(getString(R.string.popular));
                 mainPresenter.getMovies(MainActivity.this);
                 break;
             case topID:
+                mainPresenter.makeFavorite(false);
                 checkSortOrder(getString(R.string.top_rated));
                 mainPresenter.getMovies(MainActivity.this);
                 break;
             case favoriteID:
+                mainPresenter.makeFavorite(true);
                 recyclerView.setAdapter(favoriteAdapter);
+                goToScrollPosition();
                 break;
         }
+    }
+
+    public void goToScrollPosition(){
+        recyclerView.scrollToPosition(currentVisiblePosition);
+        currentVisiblePosition = 0;
     }
 
     /**
@@ -179,7 +199,7 @@ public class MainActivity
             span=3;
         }
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, span);
+        layoutManager = new GridLayoutManager(MainActivity.this, span);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -210,6 +230,14 @@ public class MainActivity
         switch (messageId) {
             case R.string.network_disabled:
                 Snackbar.make(constraintLayout, R.string.network_disabled, Snackbar.LENGTH_LONG).show();
+                break;
+            case R.string.network_available:
+                if(initialized) {
+                    Snackbar.make(constraintLayout, R.string.network_available, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.refresh, new refreshData())
+                            .show();
+                }
+                initialized = true;
                 break;
         }
     }
@@ -267,7 +295,6 @@ public class MainActivity
         intent.putExtra(Movie.MovieTags.MOVIE_PLOT, cursor.getString(INDEX_MOVIE_PLOT));
         intent.putExtra(Movie.MovieTags.MOVIE_POSTER, cursor.getString(INDEX_MOVIE_POSTER));
         intent.putExtra(Movie.MovieTags.MOVIE_BACKDROP, cursor.getString(INDEX_MOVIE_BACKDROP));
-        Log.d("tbs", "onFavoriteClick: " +cursor.getString(INDEX_MOVIE_BACKDROP));
         intent.putExtra(Movie.MovieTags.MOVIE_VOTE, cursor.getString(INDEX_MOVIE_VOTE));
         intent.putExtra(Movie.MovieTags.ID, cursor.getString(INDEX_MOVIE_ID));
         startActivity(intent);
@@ -287,4 +314,10 @@ public class MainActivity
                 null);
     }
 
+    private class refreshData implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            makeDemand();
+        }
+    }
 }

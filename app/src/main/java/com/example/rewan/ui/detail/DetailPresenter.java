@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.rewan.R;
 import com.example.rewan.base.BasePresenter;
 import com.example.rewan.model.Movie;
 import com.example.rewan.model.Review;
@@ -85,7 +86,6 @@ class DetailPresenter
         this.id = id;
     }
 
-    @Override
     public void makeCall() {
         Call<JsonObject> videosCall = dataService.loadVideos(id, API_KEY);
         makeCallWithType(videosCall, CallType.VIDEO);
@@ -161,5 +161,10 @@ class DetailPresenter
      */
     public float convertToFloat(String vote){
         return Float.parseFloat(vote)/2;
+    }
+
+    @Override
+    public void sendNetworkAvailableMessage() {
+        view.showMessage(R.string.network_available);
     }
 }

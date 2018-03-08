@@ -28,6 +28,7 @@ public class BaseActivity extends AppCompatActivity {
     public static final int INDEX_MOVIE_PLOT = 6;
     public static final int INDEX_MOVIE_ID = 7;
 
+    public static final String POSITION = "position";
 
     /**
      * Method to check if screen is in Landscape mode

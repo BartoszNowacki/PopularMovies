@@ -15,7 +15,10 @@
     <string name="database_add">Movie is favorite!</string>
     <string name="database_remove">Movie is no longer favorite</string>
     <string name="error">Error with code: </string>
+    <string name="network_available">Network reconnected</string>
+    <string name="refresh">Refresh data</string>
     <string name="sort">sort</string>
+
 
     <!-- Spinner items -->
     <string name="top_rated">Top rated</string>

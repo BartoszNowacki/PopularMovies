@@ -23,6 +23,7 @@ import android.widget.ToggleButton;
 
 import com.example.rewan.data.MovieContract;
 import com.example.rewan.ui.BaseActivity;
+import com.example.rewan.ui.main.MainActivity;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 
 import com.example.rewan.R;
@@ -90,6 +91,7 @@ public class DetailActivity
     List<Video> videosList;
     List<Review> reviewsList;
     private DataService dataService;
+    private boolean initialized;
 
 
     @Override
@@ -104,6 +106,8 @@ public class DetailActivity
         setupVideosRecyclerView();
         setupReviewsRecyclerView();
 
+        initialized=false;
+
         String apiKey = getString(R.string.movie_api_key);
         detailPresenter = new DetailPresenter(dataService, apiKey);
         detailPresenter.attachView(this);
@@ -117,6 +121,7 @@ public class DetailActivity
         detailPresenter.setID(movieID);
         Log.d(TAG, "onCreate: tbs  " + backdropEndpoint);
         setView();
+        detailPresenter.makeCall();
     }
 
     @Override
@@ -340,6 +345,14 @@ public class DetailActivity
             case R.string.database_add:
                 Snackbar.make(constraintLayout, R.string.database_add, Snackbar.LENGTH_LONG).show();
                 break;
+            case R.string.network_available:
+                if (initialized) {
+                    Snackbar.make(constraintLayout, R.string.network_available, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.refresh, new refreshData())
+                            .show();
+                }
+                initialized=true;
+                break;
         }
     }
 
@@ -350,9 +363,14 @@ public class DetailActivity
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.d(TAG, "onItemClick:  called");
         Video videoItem = videosList.get(position);
         Intent intent = YouTubeStandalonePlayer.createVideoIntent(this, getString(R.string.youtube_api_key), videoItem.getVideoEndpoint(), 0, true, false);
         startActivity(intent);
+    }
+    private class refreshData implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            detailPresenter.makeCall();
+        }
     }
 }
